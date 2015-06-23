@@ -1,0 +1,40 @@
+<div class="login-wrapper">
+	<div class="container" layout="row" layout-sm="column" >
+		<div layout-gt-sm="column" layout-sm="row" layout-align="center center" layout-sm-align="center start" flex="50">
+			<img ng-src="img/logo.png" alt="Store">
+		</div>
+	
+	<div layout-gt-sm="column" layout-sm="row" layout-align="center center" layout-sm-align="center start" flex="50">	
+		<md-card flex-sm="100">
+			<md-card-content>
+			<h2>Login</h2>
+			<form name="loginForm">     			
+     			<md-content class="md-padding">
+					<md-input-container md-no-float>
+						<!--<md-icon md-svg-src="/img/icons/ic_person_24px.svg"></md-icon>-->
+						<label>Username</label>
+						<input md-maxlength="20" type="text" name="username" ng-model="login.username" required>
+						<div ng-messages="loginForm.login.username.$error">
+							<div ng-message="required">This is required.</div>
+						</div>
+					 </md-input-container>
+
+					 <md-input-container md-no-float>
+						<!--<md-icon md-svg-src="/img/icons/ic_blur_circular_48px.svg"></md-icon>-->
+						<label>Password</label>
+						<input md-maxlength="20" type="password" name="password" ng-model="login.password" required>
+						 <div ng-messages="loginForm.login.password.$error">
+							<div ng-message="required">This is required.</div>
+							<!--<div ng-message="md-maxlength">The name has to be less than 30 characters long.</div>-->
+						</div>	
+					 </md-input-container>
+				</md-input-container>
+			</form>	<br>		
+			 <div layout="row" layout-align="end" layout-align-sm="center"><md-button class="md-primary md-raised" flex-sm="100" flex="40"> Login </md-button></div>
+			
+
+			</md-card-content>
+		</md-card>
+		</div>
+	</div>
+</div>

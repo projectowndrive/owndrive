@@ -1,0 +1,81 @@
+<main-toolbar></main-toolbar>
+
+
+<div ng-controller="SideNavCtrl" layout="row" class="store-app">
+    <md-sidenav class="md-sidenav-left md-whiteframe-z1" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')">
+        <div class="upload-wrapper">
+            <md-button class="md-warn md-raised md-hue-2 upload" ng-disabled="disableUpload" id="upload_file_btn">Upload
+                <i class="ion-android-upload"></i>
+            </md-button>
+        </div>
+
+        <div class="menu" flex>
+            <md-list>
+                <md-item ng-click="explorer()">
+                    <md-item-content class="md-primary" flex>
+                        <md-button md-ink-ripple="#99a">
+                            <a class="md-secondary" ui-sref="app.explorer">
+                                <i class="ion-android-contact"></i>
+                                <h5>My Files</h5>
+                            </a>
+                        </md-button>
+                    </md-item-content>
+                </md-item>
+                <!--<md-item>
+                    <md-item-content class="md-primary" flex>
+                        <md-button md-ink-ripple="#99a">
+                            <a class="md-secondary" href="">
+                                <i class="ion-android-share-alt"></i>
+                                <h5>Shared with me</h5>
+                            </a>
+                        </md-button>
+                    </md-item-content>
+                </md-item>-->
+                <md-item>
+                    <md-item-content class="md-primary" flex>
+                        <md-button md-ink-ripple="#99a">
+                            <a class="md-secondary" ui-sref="app.recent">
+                                <i class="ion-android-time"></i>
+                                <h5>Recent</h5>
+                            </a>
+                        </md-button>
+                    </md-item-content>
+                </md-item>
+                <md-item>
+                    <md-item-content class="md-primary" flex>
+                        <md-button md-ink-ripple="#99a">
+                            <a class="md-secondary" ui-sref="app.fav">
+                                <i class="ion-android-favorite"></i>
+                                <h5>Favorite</h5>
+                            </a>
+                        </md-button>
+                    </md-item-content>
+                </md-item>
+                <md-item>
+                    <md-item-content class="md-primary" flex>
+                        <md-button md-ink-ripple="#99a">
+                            <a class="md-secondary" ui-sref="app.trash" ng-click>
+                                <i class="ion-android-delete"></i>
+                                <h5>Trash</h5>
+                            </a>
+                        </md-button>
+                    </md-item-content>
+                </md-item>
+            </md-list>
+        </div>
+
+        <input type="file" nv-file-select uploader="uploader" class="upload_file" multiple>
+
+
+        <a class="my-groups" href="" layout-align="end">My Groups</a>
+    </md-sidenav>
+
+
+    <md-button ng-click="toggleLeft()" class="md-primary" style="display:none;">
+        Toggle left
+    </md-button>
+
+    <div flex class="app-space">
+        <div ui-view flex></div>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+<md-toolbar class="main-toolbar md-primary md-hue-1" layout="row">
+	<div class="logo-wraper">
+		<img class="logo" src="img/logo-toolbar.png" alt="">
+
+
+	</div>
+	<div class="search" flex="50">
+<!--<md-autocomplete md-selected-item="selectedItem" md-search-text="searchText" md-items="item in getMatches(searchText)" md-item-text="item.display">
+  <span md-highlight-text="searchText">{{item.display}}</span>
+</md-autocomplete>-->
+	</div>
+	<div class="user" flex="30" layout="row" layout-align="end center">
+<!--		<md-button class="user-tool md-icon-button" ng-aria="Notifications" aria-label="Notifications">
+			<i class="ion-android-notifications"></i>
+		</md-button>
+		<md-button class="user-tool md-icon-button" ng-aria="Settings" aria-label="Settings">
+			<i class="ion-android-settings"></i>
+		</md-button>-->
+		<md-button class="user-tool md-icon-button" ng-click="logout()" ng-aria="User options" aria-label="User options">
+			<div class="user-avatar">
+				<!--<img ng-src="{{avatar}}" alt="">-->
+                <i class="ion-power"></i>
+			</div>
+		</md-button>
+	</div>
+</md-toolbar>

@@ -1,0 +1,18 @@
+<md-bottom-sheet class="md-grid">
+  <md-list ng-layout="row" ng-layout-sm="column">
+  <div flex="15" flex-sm="100">    
+  <div class="store-item-wraper">
+    <store-item class={{item.id}} name={{item.name}} item-type={{item.type}}  mime-type={{item.mime}}>
+    </store-item>
+    </div>
+  </div>
+    <md-item ng-repeat="(property, value) in bottemsheetItems" flex="5" flex-sm="100">
+     
+     <div class="md-list-item-text">
+      <h5>{{property}}</h5>
+      <span>{{value}}</span>
+    </div>
+
+    </md-item>
+  </md-list>
+</md-bottom-sheet>

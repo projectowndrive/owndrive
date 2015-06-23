@@ -1,0 +1,71 @@
+.login-wrapper{
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	background-image: url(../img/Evening-Images-5.jpg);
+	background-repeat: no-repeat;
+	
+	.container{
+		.login-box{
+				background-color: #fff;
+			md-card{
+				background-color: #fff;
+				margin: 0;				
+				h2{
+					color: #666;
+					text-align: center;	
+					margin: 0;
+				}
+				md-content{
+					padding: 0;
+					md-icon{
+						height: 24px;
+						width: 24px;
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+
+
+
+/**
+Breakpints
+*/
+
+//Very Large Screens
+@include breakpoint (1200px) {
+	
+
+}
+
+//Large Screens
+@include breakpoint (960px) {
+	
+
+}
+
+//Tablets
+@include breakpoint (600px) {
+	
+.login-wrapper{
+	background-size: 100% 100%;	
+	.container{
+		height: 100%;
+	}	
+}
+
+
+}
+
+//Phones
+@include breakpoint (0px 599px) {
+.login-wrapper{	
+	background-size: 100% auto;	
+}
+}
+

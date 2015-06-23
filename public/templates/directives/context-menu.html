@@ -1,0 +1,12 @@
+<div class="dropdown position-fixed store-context-menu md-whiteframe-z2" id="context-menu">
+  <div class="dropdown-menu" role="menu">
+    <div ng-repeat="item in contextMenuItems">
+      <md-button ng-if="item.enabled" ng-click="contextMenuAction(item.action)">
+        <a class="pointer" role="menuitem" tabindex="{{item.tabIndex}}" md-ink-ripple="#99a">
+          <i class="{{item.icon}}"></i>{{item.label}}
+        </a>
+      </md-button>
+      <md-divider ng-if="item.divider&&item.enabled" ></md-divider>
+    </div>
+  </div>
+</div>

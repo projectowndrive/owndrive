@@ -1,0 +1,17 @@
+<div class="store-item folder" ng-if="folder">
+
+    <div class="hint--bottom" data-hint="{{name}}" style="display:block">
+        <div class="title">
+            {{name}}
+        </div>
+    </div>
+</div>
+<div class="store-item file" ng-if="file">
+    <i ng-class="itemIcon"></i>
+
+    <div class="hint--bottom" data-hint="{{name}}" style="display:block">
+        <div class="title" alt="{{name}}">
+            {{name}}
+        </div>
+    </div>
+</div>

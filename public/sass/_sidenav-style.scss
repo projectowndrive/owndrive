@@ -1,0 +1,88 @@
+.md-sidenav-left {
+	height: calc(100vh - 64px);
+  background-color: #24282e;
+	a {
+		i {
+			display: inline;
+			padding: 0 5px;
+			font-size: 20px;
+		}
+		text-align: center;
+		text-decoration: none;
+		color: #828ba0;
+	}
+  .upload-wrapper{
+    background-color: #1b1e25;
+
+    .upload {
+      margin: 30px 10%;
+      line-height: 15px;
+      width: 80%;
+      padding: 10px 0;
+
+      i {
+        font-size: 25px;
+        vertical-align: sub;
+      }
+      md-button{
+        padding: 10px 0;
+      }
+    }
+  }
+
+  .upload_file{
+    opacity: 100;
+    display: none;
+  }
+
+  md-item{
+    border-left: 5px solid #24282e;
+    display: block;
+    padding: 0;
+    &:hover{
+     background-color:#1b1e25;
+     //border-left-color:#dd4b39;
+     border-left-color:#db301b;
+    }
+
+    .md-button{
+      margin: 0;
+      width: 100%;
+      text-transform: none;
+      &:hover {
+        background-color: #1b1e25;
+      }
+    }
+  }
+	.my-groups {
+		padding: 20px;
+		//border-top: 1px solid #eee;
+      background-color: #343842;
+	}
+	.menu {
+      margin-top: 30px;
+    overflow-y:auto;
+    overflow-x:hidden;
+		a {
+			padding: 5px 12px;
+			vertical-align: middle;
+			display: block;
+			width: 100%;
+			text-align: left;
+      display: block;
+		}
+		i {
+			display: inline;
+			vertical-align: middle;
+		}
+		h5 {
+			display: inline;
+			line-height: 20px;
+		}
+	}
+}
+
+md-sidenav.md-locked-open {
+	width: 220px;
+	min-width: 220px;
+}

@@ -1,0 +1,31 @@
+<div class="title-bar">
+    <div class="title">
+        <i class="ion-arrow-up-a"></i>Uploads
+    </div>
+    <div class="btn close" ng-click="closeThisDialog()"><i class="ion-android-close"></i></div>
+    <div class="btn restore" ng-click="restore()"><i ng-class="restoreIcon"></i></div>
+</div>
+
+<div class="dialog-content" ng-if="fullWindow">
+
+    <div class="item-wrapper" ng-repeat="item in uploadQueue">
+        <div class="file-item">
+            <div class="file-name">{{item.file.name}}</div>
+
+
+            <div class="item-btn remove" ng-click="removeFromQueue(item)"><i class="ion-android-close"></i></div>
+            <div class="item-btn cancel" ng-if="item.isUploading"><div ng-click="cancelItem(item)"><i class="ion-stop"></i></div></div>
+            <div class="item-btn upload" ng-if="!(item.isUploading) && !(item.isSuccess)"><div ng-click="uploadItem(item)"><i class="ion-android-arrow-dropright"></i></div></div>
+            <div class="upload-progress" flex>
+                <span ng-if="isReady ||(item.isUploading && item.progress === 0)"><md-progress-linear class="md-primary md-hue-1" md-mode="indeterminate"></md-progress-linear></span>
+                <span ng-if="item.isUploading && item.progress != 0"><md-progress-linear class="md-primary md-hue-1" md-mode="determinate" value="{{item.progress}}"></md-progress-linear></span>
+                <span ng-if="item.isSuccess" style="color:#2ca02c">Uploaded</span>
+                <span ng-if="item.isCancel" style="color:#aaa">Canceled</span>
+                <span ng-if="item.isUploaded&&!(item.isSuccess)" style="color:#db301b">Uploaded with an error</span>
+                <span ng-if="item.isError" style="color:#db301b">Error</span>
+            </div>
+
+        </div>
+    </div>
+
+</div>

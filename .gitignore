@@ -1,0 +1,16 @@
+/vendor
+/node_modules
+.env
+.idea
+/vendor
+/public/.sass-cache
+/public/node_modules
+/public/sass1
+/public/bower - old.json
+/public/Frontend.zip
+/public/gemfile
+/public/img/temp
+/public/js/lib
+/public/stylesheets
+/public/store.sublime-project
+/public/store.sublime-workspace

@@ -1,0 +1,26 @@
+<div layout="column">
+    <md-toolbar class="sub-toolbar md-whiteframe-z1 md-accent" layout="row">
+    </md-toolbar>
+
+
+        <div class="drop-overlay">
+            <div class="overlay-img"></div>
+        </div>
+
+
+
+        <div id="explorer" class="explorer" flex nv-file-drop uploader="uploader" nv-file-over over-class="file-over"
+             data-target="context-menu" context-menu="emptyAreaContextMenu()" ng-click="emptyAreaFocus()">
+            <div ng-repeat="item in StoreContents" class="store-item-wraper">
+                <div context-menu data-target="context-menu">
+                    <store-item class={{item.id}} name={{item.name}} item-type={{item.type}} mime-type={{item.mime}}
+                                ng-click="" ng-focus="storeItemFocus(item.type,item)" ng-dblclick="openDirectory()">
+                    </store-item>
+                </div>
+            </div>
+            <context-menu></context-menu>
+        </div>
+
+
+
+</div>

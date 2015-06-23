@@ -1,0 +1,356 @@
+ownDriveServ
+
+.factory('ContextMenuServ', function() {
+
+
+    /*Context Menu Items for Explorer*/
+
+    var service = {}
+
+
+    service.getcontextMenuItemsforExplorer = function(item) {
+
+ /*       angular.forEach(contextMenuItemsforExplorer, function(item) {
+            item.enabled = 'false'
+          }*/
+        
+        if (item === "folder") {
+
+
+            var contextMenuItemsforExplorer = [
+                open= {
+                    label: 'Open',
+                    icon: '',
+                    target: '',
+                    tabIndex: '1',
+                    divider: false,
+                    enabled: true
+                },
+                rename= {
+                    label: 'rename',
+                    icon: '',
+                    target: '',
+                    tabIndex: '2',
+                    divider: true,
+                    enabled: true
+                },
+                copy= {
+                    label: 'copy',
+                    icon: 'ion-ios-copy',
+                    target: '',
+                    tabIndex: '3',
+                    divider: false,
+                    enabled: true
+                },
+                cut= {
+                    label: 'cut',
+                    icon: 'ion-scissors',
+                    target: '',
+                    tabIndex: '4',
+                    divider: false,
+                    enabled: true
+                },
+                paste= {
+                    label: 'paste',
+                    icon: 'ion-scissors',
+                    target: '',
+                    tabIndex: '5',
+                    divider: false,
+                    enabled: true
+                },
+                del= {
+                    label: 'delete',
+                    icon: 'ion-android-delete',
+                    target: '',
+                    tabIndex: '6',
+                    divider: true,
+                    enabled: true
+                },
+                refresh= {
+                    label: 'refresh',
+                    icon: 'ion-loop',
+                    target: '',
+                    tabIndex: '9',
+                    divider: false,
+                    enabled: true
+                },
+                addfavorites= {
+                    label: 'Add to favorites',
+                    icon: 'ion-android-favorite',
+                    target: '',
+                    tabIndex: '10',
+                    divider: false,
+                    enabled: true
+                },
+                downloadzip= {
+                    label: 'Download as zip',
+                    icon: 'ion-android-download',
+                    target: '',
+                    tabIndex: '15',
+                    divider: true,
+                    enabled: true
+                },
+                properties= {
+                    label: 'displayProperties',
+                    icon: 'ion-ios-information',
+                    target: '',
+                    tabIndex: '16',
+                    divider: false,
+                    enabled: true
+                }
+
+            ]
+
+        } else if (item === "file") {
+
+
+
+            var contextMenuItemsforExplorer = [
+                rename= {
+                    label: 'rename',
+                    icon: '',
+                    target: '',
+                    tabIndex: '2',
+                    divider: true,
+                    enabled: true
+                },
+                copy= {
+                    label: 'copy',
+                    icon: 'ion-ios-copy',
+                    target: '',
+                    tabIndex: '3',
+                    divider: false,
+                    enabled: true
+                },
+                cut= {
+                    label: 'cut',
+                    icon: 'ion-scissors',
+                    target: '',
+                    tabIndex: '4',
+                    divider: false,
+                    enabled: true
+                },
+                paste= {
+                    label: 'paste',
+                    icon: 'ion-scissors',
+                    target: '',
+                    tabIndex: '5',
+                    divider: false,
+                    enabled: true
+                },
+                del= {
+                    label: 'delete',
+                    icon: 'ion-android-delete',
+                    target: '',
+                    tabIndex: '6',
+                    divider: true,
+                    enabled: true
+                },
+                refresh= {
+                    label: 'refresh',
+                    icon: 'ion-loop',
+                    target: '',
+                    tabIndex: '9',
+                    divider: false,
+                    enabled: true
+                },
+                addfavorites= {
+                    label: 'Add to favorites',
+                    icon: 'ion-android-favorite',
+                    target: '',
+                    tabIndex: '10',
+                    divider: false,
+                    enabled: true
+                },
+                share= {
+                    label: 'Share',
+                    icon: 'ion-android-share-alt',
+                    target: '',
+                    tabIndex: '12',
+                    divider: false,
+                    enabled: true
+                },
+                sharinglink= {
+                    label: 'Get link',
+                    icon: 'ion-link',
+                    target: '',
+                    tabIndex: '13',
+                    divider: false,
+                    enabled: true
+                },
+                download= {
+                    label: 'Download',
+                    icon: 'ion-android-download',
+                    target: '',
+                    tabIndex: '14',
+                    divider: true,
+                    enabled: true
+                },
+                properties= {
+                    label: 'properties',
+                    icon: 'ion-ios-information',
+                    target: '',
+                    tabIndex: '16',
+                    divider: false,
+                    enabled: true
+                }
+
+            ]
+
+
+
+        }
+
+        return contextMenuItemsforExplorer;
+
+    };
+
+    return service;
+
+
+
+
+
+
+
+
+
+    /*    return {
+      //element: null,
+      //: null
+    };*/
+});
+
+
+
+/*var contextMenuItemsforExplorer = {
+            'open'= {
+                label: 'Open',
+                icon: '',
+                target: '',
+                tabIndex: '1',
+                divider: false,
+                enabled: true
+            },
+            'rename'= {
+                label: 'rename',
+                icon: '',
+                target: '',
+                tabIndex: '2',
+                divider: true,
+                enabled: true
+            },
+            'copy'= {
+                label: 'copy',
+                icon: 'ion-ios-copy',
+                target: '',
+                tabIndex: '3',
+                divider: false,
+                enabled: true
+            },
+            'cut'= {
+                label: 'cut',
+                icon: 'ion-scissors',
+                target: '',
+                tabIndex: '4',
+                divider: false,
+                enabled: true
+            },
+            'cut'= {
+                label: 'paste',
+                icon: 'ion-scissors',
+                target: '',
+                tabIndex: '5',
+                divider: false,
+                enabled: true
+            },
+            'del'= {
+                label: 'delete',
+                icon: 'ion-android-delete',
+                target: '',
+                tabIndex: '6',
+                divider: true,
+                enabled: true
+            },
+            'restore'= {
+                label: 'restore',
+                icon: 'ion-android-refresh',
+                target: '',
+                tabIndex: '7',
+                divider: false,
+                enabled: true
+            },
+            'delalways'= {
+                label: 'delete forever',
+                icon: 'ion-android-delete',
+                target: '',
+                tabIndex: '8',
+                divider: false,
+                enabled: true
+            },
+            'refresh'= {
+                label: 'refresh',
+                icon: 'ion-loop',
+                target: '',
+                tabIndex: '9',
+                divider: false,
+                enabled: true
+            },
+            'addfavorites'= {
+                label: 'Add to favorites',
+                icon: 'ion-android-favorite',
+                target: '',
+                tabIndex: '10',
+                divider: false,
+                enabled: true
+            },
+            'removefavorites'= {
+                label: 'Remove from favorites',
+                icon: 'ion-android-favorite-outline',
+                target: '',
+                tabIndex: '11',
+                divider: false,
+                enabled: true
+            },
+            'share'= {
+                label: 'Share',
+                icon: 'ion-android-share-alt',
+                target: '',
+                tabIndex: '12',
+                divider: false,
+                enabled: true
+            },
+            'sharinglink'= {
+                label: 'Get link',
+                icon: 'ion-link',
+                target: '',
+                tabIndex: '13',
+                divider: false,
+                enabled: true
+            },
+            'download'= {
+                label: 'Download',
+                icon: 'ion-android-download',
+                target: '',
+                tabIndex: '14',
+                divider: true,
+                enabled: true
+            },
+            'downloadzip'= {
+                label: 'Download as zip',
+                icon: 'ion-android-download',
+                target: '',
+                tabIndex: '15',
+                divider: true,
+                enabled: true
+            },
+            'properties'= {
+                label: 'properties',
+                icon: 'ion-ios-information',
+                target: '',
+                tabIndex: '16',
+                divider: false,
+                enabled: true
+            }
+
+        }*/
