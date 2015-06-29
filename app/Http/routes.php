@@ -44,7 +44,7 @@ Route::group(['domain' => 'backend.'. preg_replace('#^https?://#', '', Config::g
     Route::post('/createdir', 'FilesController@createDirectory');
 
     Route::post('/getfiles', 'FilesController@getFiles');
-    Route::post('/getfilesshared', 'FilesController@getFilesSharedWith');
+    Route::post('/getfilessharedwith', 'FilesController@getFilesSharedWith');
     Route::post('/getrecentfiles', 'FilesController@getRecentFiles');
     Route::post('/getfavoritefiles', 'FilesController@getFavoriteFiles');
     Route::post('/gettrashedfiles', 'FilesController@getTrashedFiles');
@@ -59,16 +59,15 @@ Route::group(['domain' => 'backend.'. preg_replace('#^https?://#', '', Config::g
 
 
     Route::post('/addfavorites', 'FilesController@addFavorites');
-    Route::post('/sharefile', 'FilesController@shareFile');
     Route::post('/removefavorites', 'FilesController@removeFavorites');
+    Route::post('/sharefile', 'FilesController@shareFile');
+    Route::post('/managefileshare', 'FilesController@fileShareManager');
     Route::post('/removesharefile', 'FilesController@removeShareFile');
-
 
     Route::post('/getdownloadurl', 'FilesController@getDownloadUrl');
 
-
-
     Route::post('/getsettingresource', 'SettingsController@settingResourceProvider');
+
 
 });
 

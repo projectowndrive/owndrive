@@ -63,7 +63,11 @@ class FilesController extends Controller {
 
     public function getFilesSharedWith(GetFilteredFilesRequest $request)
     {
-        return $this->fileService->getFilesSharedWith($request->input('userId'));
+        $ownerId = $request->input('ownerId');
+        $parentId = $request->input('parentId');
+        $path = $request->input('path');
+
+        return $this->fileService->getFilesSharedWith($ownerId, $parentId, $path);
     }
 
 
@@ -175,20 +179,31 @@ class FilesController extends Controller {
         return $this->fileService->downloadFile($downloadKey);
     }
 
+
+    public function fileShareManager( ShareFileRequest $request )
+    {
+        $fileId = $request->input('fileId');
+        $shareUserIds = $request->input('shareUserIds');
+        $unshareUserIds = $request->input('unshareUserIds');
+
+        return $this->fileService->fileShareManager($fileId, $shareUserIds, $unshareUserIds);
+    }
+
+
     public function shareFile( ShareFileRequest $request )
     {
         $fileId = $request->input('fileId');
-        $userId = $request->input('userId');
+        $userIds = $request->input('userIds');
 
-        return $this->fileService->shareFile($fileId, $userId);
+        return $this->fileService->shareFile($fileId, $userIds);
     }
 
     public function removeShareFile( ShareFileRequest $request )
     {
         $fileId = $request->input('fileId');
-        $userId = $request->input('userId');
+        $userIds = $request->input('userIds');
 
-        return $this->fileService->removeShareFile($fileId, $userId);
+        return $this->fileService->removeShareFile($fileId, $userIds);
     }
 
 

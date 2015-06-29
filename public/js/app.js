@@ -28,6 +28,12 @@ ownDriveServ.factory('AuthServ', ['$http', '$q', '$window', 'owndriveconst',
             .success(function(data, status, hdr, config) {
                     if (data.loginStatus){
                         $window.localStorage.setItem("loginStatus", true);
+                        $window.localStorage.setItem("activeUser", JSON.stringify(data));
+
+
+                    } else{
+                        $window.localStorage.setItem("loginStatus", false);
+                        $window.localStorage.setItem("activeUser", '');
                     }
 
                     defered.resolve(data);
@@ -209,10 +215,14 @@ ownDriveServ
             });
 
 
-            var enable = function (itemLabel) {
+            var enable = function (itemLabel, noDivider) {
                 angular.forEach(contextMenuItemsforExplorer, function (item) {
                     if (item.label == itemLabel) {
                         item.enabled = true;
+
+                        if(noDivider){
+                            item.divider = false;
+                        }
                     }
 
                 })
@@ -224,6 +234,7 @@ ownDriveServ
                 enable('copy');
                 enable('cut');
                 enable('delete');
+                enable('share');
                 //enable('download as zip');
                 enable('properties');
             } else if (item === "file") {
@@ -231,7 +242,7 @@ ownDriveServ
                 enable('copy');
                 enable('cut');
                 enable('delete');
-                //enable('share');
+                enable('share');
                 //enable('get link');
                 enable('download');
                 enable('properties');
@@ -246,8 +257,9 @@ ownDriveServ
                 enable('restore');
                 enable('delete forever');
                 enable('properties');
-            } else if (item === "blank-area-trash"){
-                enable('refresh');
+            } else if (item === "sharedwithme-item"){
+                //enable('copy');
+                enable('download', true);
             }
 
             return contextMenuItemsforExplorer;
@@ -269,14 +281,15 @@ ownDriveServ.factory('ExplorerServ', ['$http', '$q', '$rootScope', 'owndrivecons
 
 
             var deferred = $q.defer();
+            var data;
 
 
             if (parentId) {
-                var data = {parentId: parentId};
+                data = {parentId: parentId};
             } else if (path) {
-                var data = {path: path};
+                data = {path: path};
             } else {
-                var data = {path: '/'};
+                data = {path: '/'};
             }
 
 
@@ -299,377 +312,6 @@ ownDriveServ.factory('ExplorerServ', ['$http', '$q', '$rootScope', 'owndrivecons
                     $rootScope.ErrorHandler(status, data);
                 })
 
-            /*if (folderId === null || folderId === "/") {
-
-             deferred.resolve([{
-             'name': 'Songs',
-             'id': 1,
-             'type': 'folder',
-             'mime': '',
-             'attributes': {
-             'starred': '',
-             'trashed': '',
-             'restricted': '',
-             'viewed': '',
-             },
-             'ownerId': 2,
-             'permissions': ['full'],
-             'dateCreated': '25-01-2015',
-             'dateModified': '25-01-2015',
-             'contentSize': '25859',
-
-
-             }, {
-             'name': 'Project',
-             'id': 4,
-             'type': 'folder',
-             'mime': '',
-             'attributes': {
-             'starred': '',
-             'trashed': '',
-             'restricted': '',
-             'viewed': '',
-
-             },
-             'ownerId': 2,
-             'permissions': ['full'],
-             'dateCreated': '',
-             'dateModified': '',
-             'contentSize': '56984',
-
-
-             }, {
-             'name': 'photos',
-             'id': 3,
-             'type': 'folder',
-             'mime': '',
-             'attributes': {
-             'starred': '',
-             'trashed': '',
-             'restricted': '',
-             'viewed': '',
-             },
-             'ownerId': 2,
-             'permissions': ['full'],
-             'dateCreated': '25-01-2015',
-             'dateModified': '17-02-2015',
-             'contentSize': '51483',
-
-
-             }, {
-             'name': 'mypic.jpg',
-             'id': 7,
-             'type': 'file',
-             'mime': 'image/jpeg',
-             'attributes': {
-             'starred': '',
-             'trashed': '',
-             'restricted': '',
-             'viewed': '',
-             },
-             'ownerId': 2,
-             'permissions': ['full'],
-             'dateCreated': '15-03-2015',
-             'dateModified': '02-04-2015',
-             'contentSize': '4978',
-
-
-             }, {
-             'name': 'office.jpg',
-             'id': 5,
-             'type': 'file',
-             'mime': 'image/jpeg',
-             'attributes': {
-             'starred': '',
-             'trashed': '',
-             'restricted': '',
-             'viewed': '',
-             },
-             'ownerId': 2,
-             'permissions': ['full'],
-             'dateCreated': '05-01-2015',
-             'dateModified': '12-03-2015',
-             'contentSize': '10387',
-
-
-             }, {
-             'name': 'project.zip',
-             'id': 6,
-             'type': 'file',
-             'mime': 'application/zip',
-             'attributes': {
-             'starred': '',
-             'trashed': '',
-             'restricted': '',
-             'viewed': '',
-             },
-             'ownerId': 2,
-             'permissions': ['full'],
-             'dateCreated': '25-02-2015',
-             'dateModified': '28-02-2015',
-             'contentSize': '859485',
-
-
-             }, {
-             'name': 'jquery.min.js',
-             'id': 12,
-             'type': 'file',
-             'mime': 'application/x-javascript',
-             'attributes': {
-             'starred': '',
-             'trashed': '',
-             'restricted': '',
-             'viewed': '',
-             },
-             'ownerId': 2,
-             'permissions': ['full'],
-             'dateCreated': '25-02-2015',
-             'dateModified': '28-02-2015',
-             'contentSize': '1569',
-
-
-             }, {
-             'name': 'Tum hi ho.mp3',
-             'id': 8,
-             'type': 'file',
-             'mime': 'audio/x-mpeg-3',
-             'attributes': {
-             'starred': '',
-             'trashed': '',
-             'restricted': '',
-             'viewed': '',
-             },
-             'ownerId': 2,
-             'permissions': ['full'],
-             'dateCreated': '02-01-2015',
-             'dateModified': '03-01-2015',
-             'contentSize': '7854',
-
-
-             }, {
-             'name': 'TED talk.mp4',
-             'id': 9,
-             'type': 'file',
-             'mime': 'video/mp4',
-             'attributes': {
-             'starred': '',
-             'trashed': '',
-             'restricted': '',
-             'viewed': '',
-             },
-             'ownerId': 2,
-             'permissions': ['full'],
-             'dateCreated': '14-03-2015',
-             'dateModified': '18-03-2015',
-             'contentSize': '8475',
-
-
-             }, {
-             'name': 'Shoot To Thrill.mp3',
-             'id': 10,
-             'type': 'file',
-             'mime': 'audio/x-mpeg-3',
-             'attributes': {
-             'starred': '',
-             'trashed': '',
-             'restricted': '',
-             'viewed': '',
-             },
-             'ownerId': 2,
-             'permissions': ['full'],
-             'dateCreated': '12-01-2015',
-             'dateModified': '12-01-2015',
-             'contentSize': '6324',
-
-
-             }]);
-
-             }
-
-             else if(folderId === 1){
-             deffered.resolve([
-             {
-             'name': 'I like the way you lie',
-             'id': 17,
-             'type': 'file',
-             'mime': 'audio/x-mpeg-3',
-             'attributes': {
-             'starred': '',
-             'trashed': '',
-             'restricted': '',
-             'viewed': '',
-             },
-             'ownerId': 2,
-             'permissions': ['full'],
-             'dateCreated': '12-01-2015',
-             'dateModified': '12-01-2015',
-             'contentSize': '4624',
-
-
-             },{
-             'name': '01 - Tum Hi Ho',
-             'id': 18,
-             'type': 'file',
-             'mime': 'audio/x-mpeg-3',
-             'attributes': {
-             'starred': '',
-             'trashed': '',
-             'restricted': '',
-             'viewed': '',
-             },
-             'ownerId': 2,
-             'permissions': ['full'],
-             'dateCreated': '12-01-2015',
-             'dateModified': '12-01-2015',
-             'contentSize': '6324',
-
-
-             },{
-             'name': 'Shoot To Thrill.mp3',
-             'id': 19,
-             'type': 'file',
-             'mime': 'audio/x-mpeg-3',
-             'attributes': {
-             'starred': '',
-             'trashed': '',
-             'restricted': '',
-             'viewed': '',
-             },
-             'ownerId': 2,
-             'permissions': ['full'],
-             'dateCreated': '12-01-2015',
-             'dateModified': '12-01-2015',
-             'contentSize': '8424',
-
-
-             }
-             ]);
-             }
-
-             else if(folderId === 4){
-             deffered.resolve([
-             {
-             'name': 'my-code.js',
-             'id': 15,
-             'type': 'file',
-             'mime': 'application/x-javascript',
-             'attributes': {
-             'starred': '',
-             'trashed': '',
-             'restricted': '',
-             'viewed': '',
-             },
-             'ownerId': 2,
-             'permissions': ['full'],
-             'dateCreated': '25-02-2015',
-             'dateModified': '28-02-2015',
-             'contentSize': '1389',
-
-
-             },
-             {
-             'name': 'angular.min.js',
-             'id': 16,
-             'type': 'file',
-             'mime': 'application/x-javascript',
-             'attributes': {
-             'starred': '',
-             'trashed': '',
-             'restricted': '',
-             'viewed': '',
-             },
-             'ownerId': 2,
-             'permissions': ['full'],
-             'dateCreated': '25-02-2015',
-             'dateModified': '28-02-2015',
-             'contentSize': '1499',
-
-
-             },
-             ]);
-             }
-
-             else if(folderId === 3){
-             deffered.resolve([
-             {
-             'name': 'office.jpg',
-             'id': 11,
-             'type': 'file',
-             'mime': 'image/jpeg',
-             'attributes': {
-             'starred': '',
-             'trashed': '',
-             'restricted': '',
-             'viewed': '',
-             },
-             'ownerId': 2,
-             'permissions': ['full'],
-             'dateCreated': '05-01-2015',
-             'dateModified': '12-03-2015',
-             'contentSize': '9467',
-
-
-             },
-             {
-             'name': 'my Class.jpg',
-             'id': 12,
-             'type': 'file',
-             'mime': 'image/jpeg',
-             'attributes': {
-             'starred': '',
-             'trashed': '',
-             'restricted': '',
-             'viewed': '',
-             },
-             'ownerId': 2,
-             'permissions': ['full'],
-             'dateCreated': '05-01-2015',
-             'dateModified': '12-03-2015',
-             'contentSize': '8987',
-
-
-             },
-             {
-             'name': 'mobile pic 1.jpg',
-             'id': 13,
-             'type': 'file',
-             'mime': 'image/jpeg',
-             'attributes': {
-             'starred': '',
-             'trashed': '',
-             'restricted': '',
-             'viewed': '',
-             },
-             'ownerId': 2,
-             'permissions': ['full'],
-             'dateCreated': '05-01-2015',
-             'dateModified': '12-03-2015',
-             'contentSize': '11577',
-
-
-             },
-             {
-             'name': 'mobile pic 2.jpg',
-             'id': 14,
-             'type': 'file',
-             'mime': 'Nimage/jpeg',
-             'attributes': {
-             'starred': '',
-             'trashed': '',
-             'restricted': '',
-             'viewed': '',
-             },
-             'ownerId': 2,
-             'permissions': ['full'],
-             'dateCreated': '05-01-2015',
-             'dateModified': '12-03-2015',
-             'contentSize': '13387',
-
-
-             },
-             ]);
-             }*/
-
             return deferred.promise;
         };
 
@@ -683,6 +325,41 @@ ownDriveServ.factory('ExplorerServ', ['$http', '$q', '$rootScope', 'owndrivecons
                 url: owndriveconst.APP_BACKEND + '/gettrashedfiles',
                 method: 'post',
                 data: '',
+                headers: {
+                    'Content-Type': 'aplication/json'
+                },
+            })
+
+
+                .success(function (data, status, headers, config) {
+                    deferred.resolve(data);
+                })
+
+                .error(function (data, status, headers, config) {
+                    $rootScope.ErrorHandler(status, data);
+                })
+
+            return deferred.promise;
+        }
+
+
+        service.getSharedWIrhMeContents = function(path, userId, parentId){
+
+            var deferred = $q.defer();
+            var data
+
+            if (parentId) {
+                data = {parentId: parentId};
+            } else if (path) {
+                data = {path: path, ownerId:userId};
+            } else {
+                data = {path: '', ownerId:userId};
+            }
+
+            $http({
+                url: owndriveconst.APP_BACKEND + '/getfilessharedwith',
+                method: 'post',
+                data: data,
                 headers: {
                     'Content-Type': 'aplication/json'
                 },
@@ -1233,44 +910,16 @@ ownDriveServ.factory('StoreItemProcessServ', ['$http', '$q', 'owndriveconst',
         }
 
 
-
-        service.shareWithUser = function (fileId, userId) {
+        service.shareFile = function (fileId, shareUsers, unshareUsers) {
             var deffered = $q.defer();
 
             $http({
-                url: 'owndriveconst.APP_BACKEND' + '/sharewithuser',
+                url: owndriveconst.APP_BACKEND + '/managefileshare',
                 method: 'post',
                 data: {
                     'fileId': fileId,
-                    'userId': userId
-
-                },
-                headers: {
-                    'Content-Type': 'aplication/json'
-                }
-            })
-
-                .success(function(data, status, headers, config){
-                    deffered.resolve(data);
-                })
-
-                .error(function(data, status, headers, config){
-
-                })
-
-            return deffered.promise;
-        }
-
-        service.shareWithUser = function (fileId, groupId) {
-            var deffered = $q.defer();
-
-            $http({
-                url: 'owndriveconst.APP_BACKEND' + '/sharewithgroup',
-                method: 'post',
-                data: {
-                    'fileId': fileId,
-                    'userId': groupId
-
+                    'shareUserIds': shareUsers,
+                    'unshareUserIds': unshareUsers
                 },
                 headers: {
                     'Content-Type': 'aplication/json'
@@ -1376,9 +1025,9 @@ ownDriveServ.factory('StoreItemProcessServ', ['$http', '$q', 'owndriveconst',
 ])
 ownDriveServ.factory('UserServ', ['$http', '$q', '$window', 'owndriveconst', '$rootScope', '$mdToast', '$state', 'AuthServ', function ($http, $q, $window, owndriveconst, $rootScope, $mdToast, $state, AuthServ) {
 
-	var serivce = {};
+	var service = {};
 
-	serivce.getAvatar = function () {
+    service.getAvatar = function () {
 
 		var deferred = $q.defer();
 		deferred.resolve('/img/profile.jpg');
@@ -1386,7 +1035,7 @@ ownDriveServ.factory('UserServ', ['$http', '$q', '$window', 'owndriveconst', '$r
 
 	};
 
-    serivce.getUserList = function () {
+    service.getUserList = function () {
 
         var deferred = $q.defer();
 
@@ -1416,7 +1065,7 @@ ownDriveServ.factory('UserServ', ['$http', '$q', '$window', 'owndriveconst', '$r
     };
 
 
-  serivce.isLoggedin = function() {                     
+    service.isLoggedin = function() {
 
     /*if($window.localStorage.getItem("loginStatus") !== null){
     	return $window.localStorage.getItem("loginStatus");
@@ -1450,10 +1099,37 @@ ownDriveServ.factory('UserServ', ['$http', '$q', '$window', 'owndriveconst', '$r
           })
 
       return deferred.promise;
-  };
+  }
 
 
-	return serivce;
+
+    service.getUserList = function (fileId, userId) {
+        var deffered = $q.defer();
+
+        $http({
+            url: owndriveconst.APP_BACKEND + '/getsettingresource',
+            method: 'post',
+            data: {
+                'resource': 'userlist'
+            },
+            headers: {
+                'Content-Type': 'aplication/json'
+            }
+        })
+
+            .success(function(data, status, headers, config){
+                deffered.resolve(data);
+            })
+
+            .error(function(data, status, headers, config){
+
+            })
+
+        return deffered.promise;
+    }
+
+
+	return service;
 }]);
 
 
@@ -1471,7 +1147,7 @@ ownDriveCtrl.controller('ContextMenuDirCtrl', ['$scope',
 ownDriveCtrl.controller('ExplorerCtrl', ['$state', '$rootScope', '$scope', '$stateParams', 'ExplorerServ', 'ContextMenuServ', 'StoreItemProcessServ', '$mdBottomSheet', '$mdDialog', 'ngDialog', '$mdToast',
     function ($state, $rootScope, $scope, $stateParams, ExplorerServ, ContextMenu, StoreItemProcess, $mdBottomSheet, $mdDialog, ngDialog, $mdToast) {
 
-        $scope.pathFrmUrl = $stateParams.path ? $stateParams.path : null;
+        $scope.pathFrmUrl = $stateParams.path ? decodeURIComponent($stateParams.path) : null;
         $scope.parentpath = $scope.pathFrmUrl ? $scope.pathFrmUrl : '/';
         $scope.selectedItem = '';
         $scope.selectedItem.id = '';
@@ -1504,6 +1180,8 @@ ownDriveCtrl.controller('ExplorerCtrl', ['$state', '$rootScope', '$scope', '$sta
         }
 
         getStoreContents();
+
+
 
         /*Upload*/
 
@@ -1652,7 +1330,7 @@ ownDriveCtrl.controller('ExplorerCtrl', ['$state', '$rootScope', '$scope', '$sta
                 onComplete: afterShowAnimation
             })
                 .then(function (data) {
-                    if (data.status === 'success') {
+                    if (data && data.status === 'success') {
                         $scope.selectedItem.name = data.newName;
                         refresh()
                     } else {
@@ -1697,10 +1375,10 @@ ownDriveCtrl.controller('ExplorerCtrl', ['$state', '$rootScope', '$scope', '$sta
 
                         generateDirectoryName(contents);
 
-
                         $scope.closeDialog = function () {
                             $mdDialog.cancel();
                         }
+
                         $scope.createDirectory = function () {
                             StoreItemProcessServ.createDirectory($scope.directoryName, parent).then(function (response) {
                                 $mdDialog.hide({'status': response.status, 'newName': $scope.newName});
@@ -1711,15 +1389,15 @@ ownDriveCtrl.controller('ExplorerCtrl', ['$state', '$rootScope', '$scope', '$sta
                 onComplete: afterShowAnimation
             })
                 .then(function (data) {
-                    if (data.status === 'success') {
+                    if (data && data.status === 'success') {
                         refresh();
                     } else {
                     }
                 })
             function afterShowAnimation() {
 
-            }
 
+            }
         }
 
 
@@ -1876,7 +1554,7 @@ ownDriveCtrl.controller('ExplorerCtrl', ['$state', '$rootScope', '$scope', '$sta
 ownDriveCtrl.controller('FavoritesCtrl', ['$state', '$rootScope', '$scope', '$stateParams', 'ExplorerServ', 'ContextMenuServ', 'StoreItemProcessServ', '$mdBottomSheet', '$mdDialog', '$mdToast',
     function ($state, $rootScope, $scope, $stateParams, ExplorerServ, ContextMenu, StoreItemProcess, $mdBottomSheet, $mdDialog, $mdToast) {
 
-        $scope.pathFrmUrl = $stateParams.path ? $stateParams.path : null;
+        $scope.pathFrmUrl = $stateParams.path ? decodeURIComponent($stateParams.path) : null;
         $scope.parentpath = $scope.pathFrmUrl ? $scope.pathFrmUrl : '/';
         $scope.selectedItem = '';
         $scope.selectedItem.id = '';
@@ -2017,6 +1695,33 @@ ownDriveCtrl.controller('FavoritesCtrl', ['$state', '$rootScope', '$scope', '$st
 
         }
 
+
+        //share
+        var share = function () {
+
+            function afterShowAnimation(scope, element, options) {
+                // post-show code here: DOM element focus, etc.
+            }
+
+
+            $mdDialog.show({
+                templateUrl: 'templates/components/file-share.html',
+                locals: {
+                    item: $scope.selectedItem
+                },
+                controller: 'FileShareDialogCtrl',
+                onComplete: afterShowAnimation
+            })
+                .then(function (data) {
+                    refresh();
+                })
+            function afterShowAnimation() {
+
+            }
+
+        }
+
+
         //refresh
         var refresh = function () {
             $rootScope.copyclipboard = '';
@@ -2112,6 +1817,9 @@ ownDriveCtrl.controller('FavoritesCtrl', ['$state', '$rootScope', '$scope', '$st
                 case 'removefav':
                     removeFav();
                     break;
+                case 'share':
+                    share();
+                    break;
 
                 default:
 
@@ -2123,17 +1831,59 @@ ownDriveCtrl.controller('FavoritesCtrl', ['$state', '$rootScope', '$scope', '$st
 
 
 ]);
-ownDriveCtrl.controller('FileShareDialogCtrl',['$scope', '$mdDialog', '$animate', 'item', 'StoreItemProcessServ',
+ownDriveCtrl.controller('FileShareDialogCtrl', ['$scope', '$mdDialog', '$animate', 'item', 'StoreItemProcessServ',
     function ($scope, $mdDialog, $animate, item, StoreItemProcessServ) {
-        $scope.newName = item.name;
+
+
+        $scope.share = function () {
+            var selectedUserIds = [];
+
+            angular.forEach($scope.selectedUsers, function (selectedUser) {
+                selectedUserIds.push(selectedUser.id);
+            })
+
+            var unsharedUserIds = $scope.unsharedUserIds();
+            StoreItemProcessServ.shareFile(item.id, selectedUserIds, unsharedUserIds).then(function () {
+                $mdDialog.hide();
+            })
+        }
+
+
+        $scope.unsharedUserIds = function () {
+            var unshareUserIds = [];
+            var selectedUserIds = [];
+
+            angular.forEach($scope.selectedUsers, function (selecteduser) {
+                selectedUserIds.push(selecteduser.id);
+            })
+
+            if (item.shared_with) {
+                angular.forEach(item.shared_with, function (id) {
+                    if (selectedUserIds.indexOf(id) === -1) {
+                        unshareUserIds.push(id);
+                    }
+                })
+            }
+
+            return unshareUserIds;
+        }
+
+
+        $scope.addToSelectedUsers = function (users) {
+            var selectedUsers = [];
+
+            angular.forEach(users, function (user) {
+                if (item.shared_with && item.shared_with.indexOf(user.id) > -1) {
+                    selectedUsers.push(user);
+                }
+            })
+
+            return selectedUsers;
+        }
+
 
         $scope.closeDialog = function () {
-            $mdDialog.cancel({});
-        }
-        $scope.share = function () {
-            StoreItemProcessServ.share().then(function (response) {
-                $mdDialog.hide({});
-            })
+            $mdDialog.cancel();
         }
     }
 ])
@@ -2162,7 +1912,7 @@ ownDriveCtrl.controller('LoginCtrl', ['$scope', '$rootScope', '$state', '$mdToas
             }
 
  }]);
-ownDriveCtrl.controller('MainToolbarDirCtrl', ['$scope', '$state', 'toastr', '$rootScope', 'AuthServ', 'UserServ', function ($scope, $state, toastr, $rootScope, Auth, User) {
+ownDriveCtrl.controller('MainToolbarDirCtrl', ['$scope', '$window', '$state', 'toastr', '$rootScope', 'AuthServ', 'UserServ', 'owndriveconst', function ($scope, $window, $state, toastr, $rootScope, Auth, User, owndriveconst) {
 	
 
 	$scope.logout = function() {
@@ -2178,20 +1928,25 @@ ownDriveCtrl.controller('MainToolbarDirCtrl', ['$scope', '$state', 'toastr', '$r
         });
     };
 
+    $rootScope.activeUser = JSON.parse($window.localStorage.getItem('activeUser'));
 
-	User.getAvatar().then(function (data) {
+    $scope.avatar = owndriveconst.APP_BACKEND + '/img/profile/' + $rootScope.activeUser.profile_pic;
+    $scope.userName = $rootScope.activeUser.first_name + $rootScope.activeUser.last_name
+
+
+	/*User.getAvatar().then(function (data) {
 		$scope.avatar = data;
 
 
-    /*$scope.getMatches = function(searchText) {
+    *//*$scope.getMatches = function(searchText) {
         return {
           display: ''
         };
 
         $scope.searchText  = '';
-    };    */
+    };    *//*
 
-	});
+	});*/
 
 	
 
@@ -2200,7 +1955,7 @@ ownDriveCtrl.controller('MainToolbarDirCtrl', ['$scope', '$state', 'toastr', '$r
 ownDriveCtrl.controller('RecentCtrl', ['$state', '$rootScope', '$scope', '$stateParams', 'ExplorerServ', 'ContextMenuServ', 'StoreItemProcessServ', '$mdBottomSheet', '$mdDialog', '$mdToast',
     function ($state, $rootScope, $scope, $stateParams, ExplorerServ, ContextMenu, StoreItemProcess, $mdBottomSheet, $mdDialog, $mdToast) {
 
-        $scope.pathFrmUrl = $stateParams.path ? $stateParams.path : null;
+        $scope.pathFrmUrl = $stateParams.path ? decodeURIComponent($stateParams.path) : null;
         $scope.parentpath = $scope.pathFrmUrl ? $scope.pathFrmUrl : '/';
         $scope.selectedItem = '';
         $scope.selectedItem.id = '';
@@ -2209,11 +1964,12 @@ ownDriveCtrl.controller('RecentCtrl', ['$state', '$rootScope', '$scope', '$state
 
         /*Get drive contents*/
 
-        var getStoreContents = function(id, path){
+        var getStoreContents;
+        getStoreContents = function (id, path) {
             var temppath = '';
-            if (id){
+            if (id) {
                 temppath = $scope.selectedItem.path;
-            } else if(path){
+            } else if (path) {
                 temppath = path;
                 //window.location.assign(path);
             } else {
@@ -2229,7 +1985,7 @@ ownDriveCtrl.controller('RecentCtrl', ['$state', '$rootScope', '$scope', '$state
             });
 
 
-        }
+        };
 
 
         var getRecent = function () {
@@ -2343,6 +2099,32 @@ ownDriveCtrl.controller('RecentCtrl', ['$state', '$rootScope', '$scope', '$state
         }
 
 
+        //share
+        var share = function () {
+
+            function afterShowAnimation(scope, element, options) {
+                // post-show code here: DOM element focus, etc.
+            }
+
+
+            $mdDialog.show({
+                templateUrl: 'templates/components/file-share.html',
+                locals: {
+                    item: $scope.selectedItem
+                },
+                controller: 'FileShareDialogCtrl',
+                onComplete: afterShowAnimation
+            })
+                .then(function (data) {
+                    refresh();
+                })
+            function afterShowAnimation() {
+
+            }
+
+        }
+
+
         //refresh
         var refresh = function () {
             $rootScope.copyclipboard = '';
@@ -2437,6 +2219,168 @@ ownDriveCtrl.controller('RecentCtrl', ['$state', '$rootScope', '$scope', '$state
                     break;
                 case 'removefav':
                     removeFav();
+                    break;
+                case 'share':
+                    share();
+                    break;
+
+                default:
+
+            }
+        }
+
+
+    }
+
+
+]);
+ownDriveCtrl.controller('SearchDirCtrl',['$scope', '$animate', 'StoreItemProcessServ',
+    function ($scope, $animate, StoreItemProcessServ) {
+
+
+         $scope.searchList = function(){
+             /*StoreItemProcessServ.getUserList().then(function (response){
+                 console.log(response);
+                 $scope.autocompleteList = response;
+             })*/
+         }
+
+        $scope.searchList();
+
+        $scope.item = function(query){
+            $scope.autocompleteList = query ? $scope.autocompleteList.filter( createFilterFor(query) ) : $scope.autocompleteList;
+        }
+
+        function createFilterFor(query) {
+            var lowercaseQuery = angular.lowercase(query);
+            return function filterFn(state) {
+                return (state.value.indexOf(lowercaseQuery) === 0);
+            };
+        }
+
+    }
+])
+ownDriveCtrl.controller('SharedWithMeCtrl', ['$state', '$rootScope', '$scope', '$stateParams', 'ExplorerServ', 'ContextMenuServ', 'StoreItemProcessServ', '$mdBottomSheet', '$mdDialog', '$mdToast',
+    function ($state, $rootScope, $scope, $stateParams, ExplorerServ, ContextMenu, StoreItemProcess, $mdBottomSheet, $mdDialog, $mdToast) {
+
+
+        $scope.pathFrmUrl = $stateParams.path ? decodeURIComponent($stateParams.path) : null;
+        $scope.parentpath = $scope.pathFrmUrl ? $scope.pathFrmUrl : '';
+        $scope.selectedItem = '';
+        $scope.selectedItem.id = '';
+
+
+
+        /*Get drive contents*/
+
+        var getSharedWIrhMeContents;
+        getSharedWIrhMeContents = function (path, ownerId, id) {
+            var temppath = '';
+            if (id) {
+                temppath = $scope.selectedItem.path;
+            } else if (path) {
+                temppath = path
+
+                //window.location.assign(path);
+            } else {
+                temppath = $scope.pathFrmUrl ? $scope.pathFrmUrl : '';
+                path = $scope.pathFrmUrl;
+            }
+
+
+            ExplorerServ.getSharedWIrhMeContents(path, ownerId, id).then(function (data) {
+                $scope.StoreContents = data;
+                // window.history.pushState("object or string", "Title", "/new-url");
+                $scope.parentpath = temppath;
+            });
+
+
+        };
+
+
+
+        getSharedWIrhMeContents();
+
+
+            /*GOn Item Focus*/
+
+        $scope.storeItemFocus = function (ietmType, selectedItem) {
+            $scope.contextMenuItems = ContextMenu.getcontextMenuItemsforExplorer('sharedwithme-item');
+            $scope.selectedItem = selectedItem;
+        }
+
+        $scope.emptyAreaContextMenu = function(){
+            $scope.contextMenuItems = ContextMenu.getcontextMenuItemsforExplorer('blank-area');
+
+        }
+
+        /*Functions for context menu*/
+
+        //open
+        $scope.openDirectory = function () {
+            if($scope.selectedItem.type === 'folder'){
+                var path = $scope.selectedItem.path + $scope.selectedItem.name;
+                $scope.parentpath = path;
+                //$state.go('app.shared-with-me', {path : path});
+                getSharedWIrhMeContents(path, $scope.selectedItem.owner_id);
+                console.log($scope.selectedItem.owner_id);
+            }
+        }
+
+
+        //properties
+        var bottomsheetProperties = function () {
+            var filesize = StoreItemProcess.getFormatedSize($scope.selectedItem.size);
+
+            $scope.bottemsheetItems = {
+                '  Name': $scope.selectedItem.name,
+                ' File Type': '',
+                ' File size': filesize,
+                'Date Created': $scope.selectedItem.created_at,
+                'Date Modified': $scope.selectedItem.updated_at,
+            }
+            $mdBottomSheet.show({
+                templateUrl: 'templates/components/bottom-sheet.html',
+                controller: 'BottomSheetCtrl',
+                locals: {
+                    bottemsheetItems: $scope.bottemsheetItems,
+                    item: $scope.selectedItem,
+                }
+            });
+        }
+
+
+        //refresh
+        var refresh = function () {
+            getSharedWIrhMeContents();
+        }
+
+        //Download
+        var download = function () {
+            StoreItemProcess.download($scope.selectedItem.id, $scope.selectedItem.mime, $scope.selectedItem.name).then(function () {
+            })
+        }
+
+
+        $scope.contextMenuAction = function (action) {
+            var item = $scope.selectedItem;
+
+
+            switch (action) {
+                case 'properties':
+                    bottomsheetProperties();
+                    break;
+                case 'refresh':
+                    refresh();
+                    break;
+                case 'open':
+                    $scope.openDirectory(item.id);
+                    break;
+                case 'download':
+                    download();
+                    break;
+                case 'copy':
+                    copy();
                     break;
 
                 default:
@@ -2660,40 +2604,54 @@ ownDriveCtrl.controller('UploadDialogCtrl', ['$scope', '$rootScope', 'ngDialog',
     }
 
 }])
-ownDriveCtrl.controller('UserSearchDirCtrl', ['$scope', '$q', '$timeout', '$log', 'UserServ', function($scope, $q, $timeout, $log, UserServ){
-    var self = this;
+ownDriveCtrl.controller('UserChipsDirCtrl', ['$scope', '$animate', 'owndriveconst', 'UserServ',
+    function ($scope, $animate, owndriveconst, UserServ) {
+
+        $scope.selectedUsers = [];
+
+        $scope.getUserList = function () {
+            UserServ.getUserList().then(function (response) {
+                $scope.users = response;
+
+                angular.forEach($scope.users, function(user) {
+                    user.lowercaseName = angular.lowercase(user.first_name + ' ' + user.last_name);
+                    user.name = user.first_name + ' ' + user.last_name;
+                    user.image = owndriveconst.APP_BACKEND + '/img/profile/' + user.profile_pic;
+                })
+
+                if($scope.addToSelectedUsers){
+                    $scope.selectedUsers = $scope.addToSelectedUsers($scope.users);
+                }
+            })
+        }
+
+        $scope.getUserList();
 
 
-    // list of `state` value/display objects
-    self.states        = loadAll();
-    //self.querySearch   = querySearch;
-    self.selectedItemChange = selectedItemChange;
-    self.searchTextChange   = searchTextChange;
+        /**
+         * Search for contacts.
+         */
 
-    $scope.placeholder = 'Please select the users to share with';
-    $scope.noCache = 'false';
+        $scope.userSearch = function(query) {
+            if(query) {
+                var arr = $scope.users.filter(function(user) {
+                    return (user.lowercaseName.indexOf(query.toLowerCase()) != -1)||(user.email.indexOf(query.toLowerCase()) != -1);
 
+                });
+                return arr;
+            }
+            return [];
+        }
 
-    function querySearch (query) {
-        var results = query ? self.states.filter( createFilterFor(query) ) : self.states;
-
+        /**
+         * Create filter function for a query string
+         */
+        function createFilterFor(query) {
+            var lowercaseQuery = angular.lowercase(query);
+                return ($scope.user.lowercaseName.indexOf(lowercaseQuery) != -1);
+        }
     }
-
-    function loadAll()
-    {
-        UserServ.getUserList().then(function (data) {
-            return data;
-        })
-    }
-
-    var selectedItemChange = function(){
-
-    }
-
-    var searchTextChange = function(){
-
-    }
-}])
+])
 ownDriveDir.directive('contextMenu', function(){
 	return {
 		 controller: 'ContextMenuDirCtrl',
@@ -2710,11 +2668,11 @@ ownDriveDir.directive('mainToolbar', function () {
 	}
 });
 'use strict'
-ownDriveDir.directive('searchUser', function () {
+ownDriveDir.directive('search', function () {
 	return {
 		restrict: '',
 		templateUrl: '/templates/directives/search.html',
-		controller: 'UserSearchDirCtrl'
+		controller: 'SearchDirCtrl'
 	}
 });
 
@@ -2736,6 +2694,16 @@ ownDriveDir.directive('storeItem', [
 
     }
 ]);
+'use strict'
+ownDriveDir.directive('userChips', function () {
+	return {
+		restrict: 'E',
+		templateUrl: '/templates/directives/user-chips.html',
+		controller: 'UserChipsDirCtrl'
+	}
+});
+
+
 ownDrive
 
 
@@ -2814,6 +2782,13 @@ ownDrive
                     controller: "RecentCtrl"
                 })
 
+                .state('app.shared-with-me', {
+                    url: "/drive/shared-with-me{path:string}",
+                    templateUrl: "/templates/app-templates/explorer-no-upload.html",
+                    requireAuth: true,
+                    controller: "SharedWithMeCtrl"
+                })
+
                 /*.state('app.explorer.path', {
                  url:"/drive/",
                  templateUrl: "/templates/app-templates/explorer.html",
@@ -2840,13 +2815,14 @@ ownDrive
             function valToString(val) {
                 console.log('valtostring');
 
-                function decode(find, replace, str) {
+                val = decodeURIComponent(val);
+                /*function decode(find, replace, str) {
                     return str.replace(new RegExp(find, 'g'), replace);
                 }
 
-                decode ('%252F', '/', val);
+                decode ('%252F', '/', val);*/
 
-                return val != null ? val.toString() : val;
+                return val != null ? val.toString() : '';
             }
             function regexpMatches(val) { /*jshint validthis:true */ return this.pattern.test(val); }
 

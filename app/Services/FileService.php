@@ -83,6 +83,10 @@ class FileService
 
         if ($userId === null) {
             $userId = $this->auth->id();
+
+            if($this->isSharedFile($parentId)){
+                $userId = $this->file->find($parentId)->get('owner_id');
+            }
         }
 
         //Set directory as user root if null
@@ -106,13 +110,32 @@ class FileService
     public function listFilesByPath($path = null, $userId = null)
     {
 
-        $parentPath = $this->pathProcessor(null, $path, false, $userId);
 
-        if ($userId === null) {
+        if($userId){
+
+            $fileName = basename($path);
+            $parentPath = str_replace($fileName, '', $path);
+            $parentPath = $this->pathProcessor(null, $parentPath, true, $userId);
+            $parentPath = $parentPath ? $parentPath : '/';
+            $path = $this->pathProcessor(null, $path, true, $userId);
+
+
+            $parentId = $this->user->find($userId)->files()->where('path', '=', $parentPath)->where('name', '=', $fileName)->get(['id'])->toArray();
+            $parentId = array_pop($parentId);
+
+                if($this->isSharedFile($parentId['id'])){
+                    return $this->listFiles($userId, $path, true);
+                } else {
+                    return $this->dispatch(new HandleErrorCommand("You don't Have access to that file."));
+                }
+
+        } elseif($userId === null) {
+
             $userId = $this->auth->id();
-        }
+            $parentPath = $this->pathProcessor(null, $path);
+            return $this->listFiles($userId, $parentPath);
 
-        return $this->listFiles($userId, $parentPath);
+        }
 
     }
 
@@ -138,7 +161,7 @@ class FileService
         $userId = $userId ? $userId : $this->auth->id();
 
         $result = $this->file->where('owner_id', '=', $userId)->where('starred', '=', '1')->get();
-        return $result;
+        return $this->appendShareStatus($result);
     }
 
     /**
@@ -150,14 +173,21 @@ class FileService
         $userId = $userId ? $userId : $this->auth->id();
 
         $result = $this->file->where('owner_id', '=', $userId)->get()->sortByDesc('updated_at')->take(10);
-        return $result;
+        return $this->appendShareStatus($result);
     }
 
-    public function getFilesSharedWith($userId = null)
+    public function getFilesSharedWith($ownerId = null,  $parentId = null, $path = null)
     {
-        $userId = $userId ? $userId : $this->auth->id();
-        $result = $this->user->find($userId)->filesSharedWith;
-        return $result;
+        $userId = $ownerId ? $ownerId : $this->auth->id();
+
+        if($parentId){
+            return $this->listFilesById($parentId);
+        } elseif($path && $path!=='/'){
+            return $this->listFilesByPath($path, $userId);
+        } else {
+            $result = $this->user->find($userId)->filesSharedWith;
+            return $result;
+        }
     }
 
 
@@ -191,8 +221,6 @@ class FileService
         }
 
         return $this->dispatch(new HandleResponseCommand($record->name . ' Uploaded'));
-
-
     }
 
 
@@ -561,8 +589,10 @@ class FileService
             $fileId = $dbItem['file_id'];
             //return $fileId;
 
-            $path = str_replace('\\', '/', storage_path()) . '/app/' . $this->auth->id() . $this->pathProcessor($fileId);
             $file = $this->file->find($fileId);
+
+
+            $path = str_replace('\\', '/', storage_path()) . '/app/' . $file->owner_id . $this->pathProcessor($fileId);
             $response = $this->response->download($path, $file->name, ["Content-Disposition" => "attachment", "filename" => $file->name]);
             ob_end_clean();
             return $response;
@@ -582,7 +612,8 @@ class FileService
         $downloadKey = Crypt::encrypt($key);
         $file = $this->file->find($fileId);
 
-        if ($file->isOwnerId($this->auth->id())) {
+
+        if ($file->isOwnerId($this->auth->id()) || $this->isSharedFile($fileId)) {
 
             if ($this->download->where('file_id', '=', $fileId)->first()) {
                 $this->download->where('file_id', '=', $fileId)->first()->delete();
@@ -602,54 +633,196 @@ class FileService
     }
 
 
-    public function shareFile($fileId, $userId)
+
+    /**
+     * @param $fileId
+     * @param $shareUserIds
+     * @param $unshareUserIds
+     * @return mixed
+     */
+    public function fileShareManager($fileId, $shareUserIds = null, $unshareUserIds = null)
     {
         $file = $this->file->find($fileId);
 
-        if ($file->isOwnerId($this->auth->id())) {
+        if ($file->type === 'file') {
+
             try {
-                $file->sharedWith()->attach($userId);
+                $shareFile = $this->shareFile($fileId, $shareUserIds, true);
+                $removeShareFile = $this->removeShareFile($fileId, $unshareUserIds, true);
             } catch (Exception $e) {
                 return $this->dispatch(new HandleErrorCommand($e->getMessage()));
             }
-            if ($file->type === 'file') {
-                $item = 'File';
-            } elseif ($file->type === 'folder') {
-                $item = 'Directory';
+
+            $item = 'File';
+        } elseif ($file->type === 'folder') {
+
+            $childrenPath = $file->path . $file->name;
+
+            try {
+                $shareFile = $this->shareFile($fileId, $shareUserIds, true);
+                $removeShareFile = $this->removeShareFile($fileId, $unshareUserIds, true);
+
+
+                $children = $this->file->where('owner_id', '=', $this->auth->id())->where('path', 'like', $childrenPath . '%')->get(['id'])->toArray();
+
+
+                foreach($children as $child){
+                    $fileId = $child['id'];
+                    $shareFile = $this->shareFile($fileId, $shareUserIds, true, true);
+                    $removeShareFile = $this->removeShareFile($fileId, $unshareUserIds, true);
+                }
+
+
+
+            } catch (Exception $e) {
+                return $this->dispatch(new HandleErrorCommand($e->getMessage()));
             }
-            $sharedWith = $this->user->find($userId);
-            return $this->dispatch(new HandleResponseCommand($item . ' shared with ' . $sharedWith->username));
+
+
+            $item = 'Directory';
+        }
+
+
+
+
+
+        if ($shareFile && $removeShareFile) {
+            return $this->dispatch(new HandleResponseCommand($item . ' shared successfully'));
         } else {
             return $this->dispatch(new HandleErrorCommand('Invalid File'));
         }
     }
 
 
-
     /**
      * @param $fileId
-     * @param $userId
+     * @param $userIds
+     * @param bool $noResponse
+     * @throws Exception
+     * @throws \Exception
      * @return mixed
      */
-    public function removeShareFile($fileId, $userId)
+    public function shareFile($fileId, $userIds = null, $noResponse = false, $child = false)
     {
         $file = $this->file->find($fileId);
 
         if ($file->isOwnerId($this->auth->id())) {
+            if ($userIds) {
+                foreach ($userIds as $userId) {
+
+                    $sharedUsers = $file->sharedWith()->get(['user_id'])->toArray();
+
+                    $attach = true;
+                    foreach ($sharedUsers as $sharedUser) {
+                        if ($sharedUser['user_id'] === $userId) {
+                            $attach = false;
+                            break;
+                        }
+                    }
+
+                    if ($attach) {
+
+                        try {
+                            if($child){
+                                $file->sharedWith()->attach($userId, ['child' => 1]);
+                            } elseif (!$child){
+                                $file->sharedWith()->attach($userId);
+                            }
+                        } catch (Exception $e) {
+                            if (!$noResponse) {
+                                return $this->dispatch(new HandleErrorCommand($e->getMessage()));
+                            } else {
+                                throw $e;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            if (!$noResponse) {
+                if ($file->type === 'file') {
+                    $item = 'File';
+                } elseif ($file->type === 'folder') {
+                    $item = 'Directory';
+                }
+
+                //$sharedWith = $this->user->find($userId);
+                return $this->dispatch(new HandleResponseCommand($item . ' shared successfully.'));
+            } else {
+                return true;
+            }
+        } else {
+            if (!$noResponse) {
+                return $this->dispatch(new HandleErrorCommand('Invalid File'));
+            } else {
+                return false;
+            }
+        }
+    }
+
+
+    /**
+     * @param $fileId
+     * @param $userIds
+     * @param bool $noResponse
+     * @throws Exception
+     * @throws \Exception
+     * @return mixed
+     */
+    public function removeShareFile($fileId, $userIds = null, $noResponse = false)
+    {
+        $file = $this->file->find($fileId);
+
+        if ($file->isOwnerId($this->auth->id())) {
+            if ($userIds) {
+                foreach ($userIds as $userId) {
+                    try {
+                        $file->sharedWith()->detach($userId);
+                    } catch (Exception $e) {
+                        if (!$noResponse) {
+                            return $this->dispatch(new HandleErrorCommand($e->getMessage()));
+                        } else {
+                            throw $e;
+                        }
+                    }
+                }
+            }
+            if (!$noResponse) {
+                if ($file->type === 'file') {
+                    $item = 'File';
+                } elseif ($file->type === 'folder') {
+                    $item = 'Directory';
+                }
+                $sharedWith = $this->user->find($userId);
+                return $this->dispatch(new HandleResponseCommand($item . ' unshared successfully'));
+            } else {
+                return true;
+            }
+        } else {
+            if (!$noResponse) {
+                return $this->dispatch(new HandleErrorCommand('Invalid File'));
+            } else {
+                return false;
+            }
+        }
+    }
+
+
+    /**
+     * @param $fileId
+     * @return mixed
+     */
+    public function fileSharedWith($fileId)
+    {
+        $file = $this->find($fileId);
+
+        if ($file->isOwnerId($this->auth->id())) {
             try {
-                $file->sharedWith()->detach($userId);
+                return $file->sharedWith();
             } catch (Exception $e) {
                 return $this->dispatch(new HandleErrorCommand($e->getMessage()));
             }
-            if ($file->type === 'file') {
-                $item = 'File';
-            } elseif ($file->type === 'folder') {
-                $item = 'Directory';
-            }
-            $sharedWith = $this->user->find($userId);
-            return $this->dispatch(new HandleResponseCommand($item . ' shared with ' . $sharedWith->username));
-        } else {
-            return $this->dispatch(new HandleErrorCommand('Invalid File'));
         }
     }
 
@@ -751,42 +924,19 @@ class FileService
 //Private Functions
 
 
+
+
     /**
-     * @param string $userId
-     * @param string|path $parentPath
-     * @return array
+     * @param $path
+     * @return mixed
      */
-    private function listFiles($userId, $parentPath)
+    private function removeSlash($path)
     {
-        $diskPath = $userId . $parentPath;
-
-        //Array containing file ids' and directory ids' in requested directory
-        $contents = [];
-
-
-        //Push directories to $files array
-        foreach ($this->disk->directories($diskPath) as $directory) {
-            array_push($contents, $directory);
-        }
-
-        //Push files to $files array
-        foreach ($this->disk->files($diskPath) as $file) {
-            array_push($contents, $file);
-        }
-
-        //Create array with file details fetched to return
-        $result = [];
-
-        foreach ($contents as $item) {
-            $record = $this->file->where('name', '=', basename($item))->where('path', '=', $parentPath)->where('trashed', '!=', '1')->get()->toArray();
-            if ($record) {
-                array_push($result, array_pop($record));
-            }
-            $result;
-        }
-
-        return $result;
+        $path = preg_replace('/\/+$/', '', $path);
+        $path = preg_replace('/^\/+/', '', $path);
+        return $path;
     }
+
 
     /**
      * @param null $fileId
@@ -829,16 +979,98 @@ class FileService
     }
 
 
+
+
     /**
-     * @param $path
-     * @return mixed
+     * @param $fileId
+     * @return bool
      */
-    private function removeSlash($path)
-    {
-        $path = preg_replace('/\/+$/', '', $path);
-        $path = preg_replace('/^\/+/', '', $path);
-        return $path;
+    private function isSharedFile($fileId){
+        $userId = $this->auth->id();
+        $filesSharedWithUser = $this->user->find($userId)->allFilesSharedWith->toArray();
+        $isSharedFile = false;
+        foreach ($filesSharedWithUser as $fileSharedWithUser){
+            if($fileSharedWithUser['id'] === $fileId){
+                $isSharedFile = true;
+                break;
+            }
+        }
+        return $isSharedFile;
     }
+
+
+    /**
+     * @param $fileList
+     * @return array
+     */
+    private function appendShareStatus($fileList) {
+        $response = [];
+
+        foreach ($fileList as $item) {
+            $file = $this->file->find($item['id']);
+            $sharedUsers = $file->sharedWith()->get()->toArray();
+            if ($sharedUsers) {
+                $sharedWith = [];
+                foreach ($sharedUsers as $sharedUser) {
+                    array_push($sharedWith, $sharedUser['id']);
+                }
+                $item['shared_with'] = $sharedWith;
+            }
+            array_push($response, $item);
+        }
+
+        return $response;
+    }
+
+
+    /**
+     * @param string $userId
+     * @param string|path $parentPath
+     * @param bool $toSharedUser
+     * @return array
+     */
+    private function listFiles($userId, $parentPath, $toSharedUser = false)
+    {
+        $diskPath = $userId . $parentPath;
+
+        //dump($diskPath);
+
+        //Array containing file ids' and directory ids' in requested directory
+        $contents = [];
+
+
+        //Push directories to $files array
+        foreach ($this->disk->directories($diskPath) as $directory) {
+            array_push($contents, $directory);
+        }
+
+        //Push files to $files array
+        foreach ($this->disk->files($diskPath) as $file) {
+            array_push($contents, $file);
+        }
+
+        //Create array with file details fetched to return
+        $result = [];
+
+        foreach ($contents as $item) {
+            $record = $this->file->where('name', '=', basename($item))->where('path', '=', $parentPath)->where('trashed', '!=', '1')->get()->toArray();
+            if ($record) {
+                array_push($result, array_pop($record));
+            }
+
+        }
+
+        if($toSharedUser){
+            return $result;
+        } else {
+            return $this->appendShareStatus($result);
+        }
+
+    }
+
+
+
+
 
 
     /**
@@ -944,10 +1176,11 @@ class FileService
      * @param string $currentName
      * @param string $newPath
      * @param string|optional $newName
+     * @param bool $sharedFile
      * @throws \Exception
      * @return bool|mixed
      */
-    private function fileCopier($currentPath, $currentName = null, $newPath, $newName = null)
+    private function fileCopier($currentPath, $currentName = null, $newPath, $newName = null, $sharedFile = false)
     {
 
         if (!$currentName) {
@@ -963,7 +1196,9 @@ class FileService
         $dbNewPath = $newPath;
 
 
-        $currentPath = $this->auth->id() . $currentPath;
+        if(!$sharedFile) {
+            $currentPath = $this->auth->id() . $currentPath;
+        }
         $newPath = $this->auth->id() . $newPath;
         $newName = $newName ? $newName : $currentName;
 

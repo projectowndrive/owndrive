@@ -1,8 +1,8 @@
 ownDriveServ.factory('UserServ', ['$http', '$q', '$window', 'owndriveconst', '$rootScope', '$mdToast', '$state', 'AuthServ', function ($http, $q, $window, owndriveconst, $rootScope, $mdToast, $state, AuthServ) {
 
-	var serivce = {};
+	var service = {};
 
-	serivce.getAvatar = function () {
+    service.getAvatar = function () {
 
 		var deferred = $q.defer();
 		deferred.resolve('/img/profile.jpg');
@@ -10,7 +10,7 @@ ownDriveServ.factory('UserServ', ['$http', '$q', '$window', 'owndriveconst', '$r
 
 	};
 
-    serivce.getUserList = function () {
+    service.getUserList = function () {
 
         var deferred = $q.defer();
 
@@ -40,7 +40,7 @@ ownDriveServ.factory('UserServ', ['$http', '$q', '$window', 'owndriveconst', '$r
     };
 
 
-  serivce.isLoggedin = function() {                     
+    service.isLoggedin = function() {
 
     /*if($window.localStorage.getItem("loginStatus") !== null){
     	return $window.localStorage.getItem("loginStatus");
@@ -74,9 +74,36 @@ ownDriveServ.factory('UserServ', ['$http', '$q', '$window', 'owndriveconst', '$r
           })
 
       return deferred.promise;
-  };
+  }
 
 
-	return serivce;
+
+    service.getUserList = function (fileId, userId) {
+        var deffered = $q.defer();
+
+        $http({
+            url: owndriveconst.APP_BACKEND + '/getsettingresource',
+            method: 'post',
+            data: {
+                'resource': 'userlist'
+            },
+            headers: {
+                'Content-Type': 'aplication/json'
+            }
+        })
+
+            .success(function(data, status, headers, config){
+                deffered.resolve(data);
+            })
+
+            .error(function(data, status, headers, config){
+
+            })
+
+        return deffered.promise;
+    }
+
+
+	return service;
 }]);
 

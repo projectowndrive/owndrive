@@ -352,44 +352,16 @@ ownDriveServ.factory('StoreItemProcessServ', ['$http', '$q', 'owndriveconst',
         }
 
 
-
-        service.shareWithUser = function (fileId, userId) {
+        service.shareFile = function (fileId, shareUsers, unshareUsers) {
             var deffered = $q.defer();
 
             $http({
-                url: 'owndriveconst.APP_BACKEND' + '/sharewithuser',
+                url: owndriveconst.APP_BACKEND + '/managefileshare',
                 method: 'post',
                 data: {
                     'fileId': fileId,
-                    'userId': userId
-
-                },
-                headers: {
-                    'Content-Type': 'aplication/json'
-                }
-            })
-
-                .success(function(data, status, headers, config){
-                    deffered.resolve(data);
-                })
-
-                .error(function(data, status, headers, config){
-
-                })
-
-            return deffered.promise;
-        }
-
-        service.shareWithUser = function (fileId, groupId) {
-            var deffered = $q.defer();
-
-            $http({
-                url: 'owndriveconst.APP_BACKEND' + '/sharewithgroup',
-                method: 'post',
-                data: {
-                    'fileId': fileId,
-                    'userId': groupId
-
+                    'shareUserIds': shareUsers,
+                    'unshareUserIds': unshareUsers
                 },
                 headers: {
                     'Content-Type': 'aplication/json'

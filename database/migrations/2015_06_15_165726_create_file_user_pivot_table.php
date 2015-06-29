@@ -13,6 +13,7 @@ class CreateFileUserPivotTable extends Migration
     public function up()
     {
         Schema::create('file_user', function(Blueprint $table) {
+            $table->increments('id');
             $table->integer('file_id')->unsigned()->index();
             $table->foreign('file_id')->references('id')->on('files')->onDelete('cascade');
             $table->integer('user_id')->unsigned()->index();

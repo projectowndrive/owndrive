@@ -1,17 +1,20 @@
             <md-autocomplete
-                    md-no-cache="noCache"
+                    md-no-cache="false"
                     md-selected-item="selectedItem"
-                    md-search-text-change="searchTextChange(ctrl.searchText)"
+                    md-search-text-change="searchTextChange(searchText)"
                     md-search-text="searchText"
-                    md-selected-item-change="selectedItemChange(item)"
-                    md-items="item in ctrl.querySearch(ctrl.searchText)"
-                    md-item-text="item.display"
+                    md-selected-item-change="searchUser(item)"
+                    md-items="item in autocompleteList"
+                    md-item-text="item.username"
                     md-min-length="0"
                     placeholder="{{placeholder}}">
                 <md-item-template>
-                    <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">{{item.display}}</span>
+                    <span md-highlight-text="searchText" md-highlight-flags="^i">{{item.display}}</span>
                 </md-item-template>
                 <md-not-found>
                     No matches found for "{{ctrl.searchText}}".
                 </md-not-found>
             </md-autocomplete>
+
+
+            <!--md-items="item in ctrl.querySearch(ctrl.searchText)"-->

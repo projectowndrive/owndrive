@@ -1,7 +1,7 @@
 ownDriveCtrl.controller('ExplorerCtrl', ['$state', '$rootScope', '$scope', '$stateParams', 'ExplorerServ', 'ContextMenuServ', 'StoreItemProcessServ', '$mdBottomSheet', '$mdDialog', 'ngDialog', '$mdToast',
     function ($state, $rootScope, $scope, $stateParams, ExplorerServ, ContextMenu, StoreItemProcess, $mdBottomSheet, $mdDialog, ngDialog, $mdToast) {
 
-        $scope.pathFrmUrl = $stateParams.path ? $stateParams.path : null;
+        $scope.pathFrmUrl = $stateParams.path ? decodeURIComponent($stateParams.path) : null;
         $scope.parentpath = $scope.pathFrmUrl ? $scope.pathFrmUrl : '/';
         $scope.selectedItem = '';
         $scope.selectedItem.id = '';
@@ -34,6 +34,8 @@ ownDriveCtrl.controller('ExplorerCtrl', ['$state', '$rootScope', '$scope', '$sta
         }
 
         getStoreContents();
+
+
 
         /*Upload*/
 
@@ -182,7 +184,7 @@ ownDriveCtrl.controller('ExplorerCtrl', ['$state', '$rootScope', '$scope', '$sta
                 onComplete: afterShowAnimation
             })
                 .then(function (data) {
-                    if (data.status === 'success') {
+                    if (data && data.status === 'success') {
                         $scope.selectedItem.name = data.newName;
                         refresh()
                     } else {
@@ -227,10 +229,10 @@ ownDriveCtrl.controller('ExplorerCtrl', ['$state', '$rootScope', '$scope', '$sta
 
                         generateDirectoryName(contents);
 
-
                         $scope.closeDialog = function () {
                             $mdDialog.cancel();
                         }
+
                         $scope.createDirectory = function () {
                             StoreItemProcessServ.createDirectory($scope.directoryName, parent).then(function (response) {
                                 $mdDialog.hide({'status': response.status, 'newName': $scope.newName});
@@ -241,15 +243,15 @@ ownDriveCtrl.controller('ExplorerCtrl', ['$state', '$rootScope', '$scope', '$sta
                 onComplete: afterShowAnimation
             })
                 .then(function (data) {
-                    if (data.status === 'success') {
+                    if (data && data.status === 'success') {
                         refresh();
                     } else {
                     }
                 })
             function afterShowAnimation() {
 
-            }
 
+            }
         }
 
 

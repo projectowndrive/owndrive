@@ -5,9 +5,7 @@
 
 	</div>
 	<div class="search" flex="50">
-<!--<md-autocomplete md-selected-item="selectedItem" md-search-text="searchText" md-items="item in getMatches(searchText)" md-item-text="item.display">
-  <span md-highlight-text="searchText">{{item.display}}</span>
-</md-autocomplete>-->
+        <search class="md-primary md-hue-1" autofocus></search>
 	</div>
 	<div class="user" flex="30" layout="row" layout-align="end center">
 <!--		<md-button class="user-tool md-icon-button" ng-aria="Notifications" aria-label="Notifications">
@@ -16,10 +14,11 @@
 		<md-button class="user-tool md-icon-button" ng-aria="Settings" aria-label="Settings">
 			<i class="ion-android-settings"></i>
 		</md-button>-->
+        <div class="username">{{userName}}</div>
 		<md-button class="user-tool md-icon-button" ng-click="logout()" ng-aria="User options" aria-label="User options">
 			<div class="user-avatar">
-				<!--<img ng-src="{{avatar}}" alt="">-->
-                <i class="ion-power"></i>
+				<img ng-src="{{avatar}}" alt="">
+                <!--<i class="ion-power"></i>-->
 			</div>
 		</md-button>
 	</div>

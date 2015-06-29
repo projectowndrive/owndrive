@@ -1,7 +1,7 @@
 ownDriveCtrl.controller('FavoritesCtrl', ['$state', '$rootScope', '$scope', '$stateParams', 'ExplorerServ', 'ContextMenuServ', 'StoreItemProcessServ', '$mdBottomSheet', '$mdDialog', '$mdToast',
     function ($state, $rootScope, $scope, $stateParams, ExplorerServ, ContextMenu, StoreItemProcess, $mdBottomSheet, $mdDialog, $mdToast) {
 
-        $scope.pathFrmUrl = $stateParams.path ? $stateParams.path : null;
+        $scope.pathFrmUrl = $stateParams.path ? decodeURIComponent($stateParams.path) : null;
         $scope.parentpath = $scope.pathFrmUrl ? $scope.pathFrmUrl : '/';
         $scope.selectedItem = '';
         $scope.selectedItem.id = '';
@@ -142,6 +142,33 @@ ownDriveCtrl.controller('FavoritesCtrl', ['$state', '$rootScope', '$scope', '$st
 
         }
 
+
+        //share
+        var share = function () {
+
+            function afterShowAnimation(scope, element, options) {
+                // post-show code here: DOM element focus, etc.
+            }
+
+
+            $mdDialog.show({
+                templateUrl: 'templates/components/file-share.html',
+                locals: {
+                    item: $scope.selectedItem
+                },
+                controller: 'FileShareDialogCtrl',
+                onComplete: afterShowAnimation
+            })
+                .then(function (data) {
+                    refresh();
+                })
+            function afterShowAnimation() {
+
+            }
+
+        }
+
+
         //refresh
         var refresh = function () {
             $rootScope.copyclipboard = '';
@@ -236,6 +263,9 @@ ownDriveCtrl.controller('FavoritesCtrl', ['$state', '$rootScope', '$scope', '$st
                     break;
                 case 'removefav':
                     removeFav();
+                    break;
+                case 'share':
+                    share();
                     break;
 
                 default:

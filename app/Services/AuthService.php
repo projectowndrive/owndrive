@@ -9,13 +9,16 @@
 namespace OwnDrive\Services;
 
 use Auth;
+use Illuminate\Foundation\Bus\DispatchesCommands;
+use OwnDrive\Commands\HandleErrorCommand;
+use OwnDrive\Commands\HandleResponseCommand;
 use OwnDrive\User;
 
 
 
 class AuthService {
 
-
+    use DispatchesCommands;
 
     function __construct(User $user)
     {
@@ -29,12 +32,26 @@ class AuthService {
      * @return bool
      */
     function login($username, $password, $remember){
+        $response = [];
+
+        try{
         if (Auth::attempt(['username'=>$username, 'password'=>$password], $remember)){
-            return true;
+            $response = Auth::getUser()->toArray();
+            $response['loginStatus'] = true;
+
+
+        } else {
+            $response['loginStatus'] = false;
+        }
+        } catch (\Exception $e){
+            return $this->dispatch(new HandleErrorCommand($e->getMessage()));
         }
 
-        return false;
+        return $response;
+
     }
+
+
 
     /**
      * @param $details

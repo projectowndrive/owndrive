@@ -19,6 +19,12 @@ ownDriveServ.factory('AuthServ', ['$http', '$q', '$window', 'owndriveconst',
             .success(function(data, status, hdr, config) {
                     if (data.loginStatus){
                         $window.localStorage.setItem("loginStatus", true);
+                        $window.localStorage.setItem("activeUser", JSON.stringify(data));
+
+
+                    } else{
+                        $window.localStorage.setItem("loginStatus", false);
+                        $window.localStorage.setItem("activeUser", '');
                     }
 
                     defered.resolve(data);

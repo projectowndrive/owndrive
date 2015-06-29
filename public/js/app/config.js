@@ -76,6 +76,13 @@ ownDrive
                     controller: "RecentCtrl"
                 })
 
+                .state('app.shared-with-me', {
+                    url: "/drive/shared-with-me{path:string}",
+                    templateUrl: "/templates/app-templates/explorer-no-upload.html",
+                    requireAuth: true,
+                    controller: "SharedWithMeCtrl"
+                })
+
                 /*.state('app.explorer.path', {
                  url:"/drive/",
                  templateUrl: "/templates/app-templates/explorer.html",
@@ -102,13 +109,14 @@ ownDrive
             function valToString(val) {
                 console.log('valtostring');
 
-                function decode(find, replace, str) {
+                val = decodeURIComponent(val);
+                /*function decode(find, replace, str) {
                     return str.replace(new RegExp(find, 'g'), replace);
                 }
 
-                decode ('%252F', '/', val);
+                decode ('%252F', '/', val);*/
 
-                return val != null ? val.toString() : val;
+                return val != null ? val.toString() : '';
             }
             function regexpMatches(val) { /*jshint validthis:true */ return this.pattern.test(val); }
 

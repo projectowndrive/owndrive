@@ -33,6 +33,6 @@ class SettingsService {
 
     private function getUserList(){
         //return $this->user->where('id', '!=', $this->auth->id())->get()->toArray();
-        return $this->user->get(['id', 'username']);
+        return $this->user->get(['id', 'first_name', 'last_name', 'email', 'profile_pic']);
     }
 } 

@@ -26,10 +26,14 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
 
     public function files()
     {
-        return $this->hasMany('OwnDrive\File');
+        return $this->hasMany('OwnDrive\File','owner_id');
     }
 
     public function filesSharedWith(){
+        return $this->belongsToMany('OwnDrive\File')->withPivot('user_id')->wherePivot('child', '=', '0');
+    }
+
+    public function allFilesSharedWith(){
         return $this->belongsToMany('OwnDrive\File')->withPivot('user_id');
     }
 

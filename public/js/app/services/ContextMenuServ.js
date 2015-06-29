@@ -139,10 +139,14 @@ ownDriveServ
             });
 
 
-            var enable = function (itemLabel) {
+            var enable = function (itemLabel, noDivider) {
                 angular.forEach(contextMenuItemsforExplorer, function (item) {
                     if (item.label == itemLabel) {
                         item.enabled = true;
+
+                        if(noDivider){
+                            item.divider = false;
+                        }
                     }
 
                 })
@@ -154,6 +158,7 @@ ownDriveServ
                 enable('copy');
                 enable('cut');
                 enable('delete');
+                enable('share');
                 //enable('download as zip');
                 enable('properties');
             } else if (item === "file") {
@@ -161,7 +166,7 @@ ownDriveServ
                 enable('copy');
                 enable('cut');
                 enable('delete');
-                //enable('share');
+                enable('share');
                 //enable('get link');
                 enable('download');
                 enable('properties');
@@ -176,8 +181,9 @@ ownDriveServ
                 enable('restore');
                 enable('delete forever');
                 enable('properties');
-            } else if (item === "blank-area-trash"){
-                enable('refresh');
+            } else if (item === "sharedwithme-item"){
+                //enable('copy');
+                enable('download', true);
             }
 
             return contextMenuItemsforExplorer;

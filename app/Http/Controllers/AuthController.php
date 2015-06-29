@@ -28,12 +28,8 @@ class AuthController extends Controller {
     {
 
         try {
-            if($this->auth->login($request->input('username'), $request->input('password'), $request->input('remember'))){
-                $response = Response::make(['loginStatus'=> true], 200);
-            }
-            else{
-                $response = Response::make(['loginStatus'=> false], 200);
-            }
+            return $this->auth->login($request->input('username'), $request->input('password'), $request->input('remember'));
+                //$response = Response::make(, 200);
         }
         catch (\Exception $e){
             $response = Response::make(['status'=> 'error', 'message'=>$e], 500);

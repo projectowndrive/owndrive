@@ -28,4 +28,8 @@ class File extends Model {
         return $this->belongsToMany('OwnDrive\User', null, 'file_id')->withPivot('user_id')->withTimestamps();
     }
 
+    public function scopeUsersFiles($query, $userId){
+        return $query->whereOwner_id($userId);
+    }
+
 }

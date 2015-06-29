@@ -70,6 +70,7 @@ md-backdrop.md-opaque.md-default-theme {
 md-dialog {
   border: 1px solid #ccc;
   min-width: 500px !important;
+  max-width: 52%;
 }
 
 .md-button {
@@ -354,7 +355,7 @@ Breakpints
   width: 100%;
   height: 100%;
   position: absolute;
-  background-image: url(../img/Evening-Images-5.jpg);
+  background-image: url(../img/login-bg.jpg);
   background-repeat: no-repeat;
 }
 .login-wrapper .container .login-box {
@@ -503,6 +504,12 @@ md-sidenav.md-locked-open {
 }
 .main-toolbar .user .user-tool img {
   vertical-align: middle;
+}
+.main-toolbar .username {
+  font-size: 14px;
+  margin-right: 20px;
+  opacity: 0.8;
+  cursor: default;
 }
 
 .sub-toolbar {

@@ -1,4 +1,4 @@
-ownDriveCtrl.controller('MainToolbarDirCtrl', ['$scope', '$state', 'toastr', '$rootScope', 'AuthServ', 'UserServ', function ($scope, $state, toastr, $rootScope, Auth, User) {
+ownDriveCtrl.controller('MainToolbarDirCtrl', ['$scope', '$window', '$state', 'toastr', '$rootScope', 'AuthServ', 'UserServ', 'owndriveconst', function ($scope, $window, $state, toastr, $rootScope, Auth, User, owndriveconst) {
 	
 
 	$scope.logout = function() {
@@ -14,20 +14,25 @@ ownDriveCtrl.controller('MainToolbarDirCtrl', ['$scope', '$state', 'toastr', '$r
         });
     };
 
+    $rootScope.activeUser = JSON.parse($window.localStorage.getItem('activeUser'));
 
-	User.getAvatar().then(function (data) {
+    $scope.avatar = owndriveconst.APP_BACKEND + '/img/profile/' + $rootScope.activeUser.profile_pic;
+    $scope.userName = $rootScope.activeUser.first_name + $rootScope.activeUser.last_name
+
+
+	/*User.getAvatar().then(function (data) {
 		$scope.avatar = data;
 
 
-    /*$scope.getMatches = function(searchText) {
+    *//*$scope.getMatches = function(searchText) {
         return {
           display: ''
         };
 
         $scope.searchText  = '';
-    };    */
+    };    *//*
 
-	});
+	});*/
 
 	
 

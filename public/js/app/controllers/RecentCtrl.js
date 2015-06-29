@@ -1,7 +1,7 @@
 ownDriveCtrl.controller('RecentCtrl', ['$state', '$rootScope', '$scope', '$stateParams', 'ExplorerServ', 'ContextMenuServ', 'StoreItemProcessServ', '$mdBottomSheet', '$mdDialog', '$mdToast',
     function ($state, $rootScope, $scope, $stateParams, ExplorerServ, ContextMenu, StoreItemProcess, $mdBottomSheet, $mdDialog, $mdToast) {
 
-        $scope.pathFrmUrl = $stateParams.path ? $stateParams.path : null;
+        $scope.pathFrmUrl = $stateParams.path ? decodeURIComponent($stateParams.path) : null;
         $scope.parentpath = $scope.pathFrmUrl ? $scope.pathFrmUrl : '/';
         $scope.selectedItem = '';
         $scope.selectedItem.id = '';
@@ -10,11 +10,12 @@ ownDriveCtrl.controller('RecentCtrl', ['$state', '$rootScope', '$scope', '$state
 
         /*Get drive contents*/
 
-        var getStoreContents = function(id, path){
+        var getStoreContents;
+        getStoreContents = function (id, path) {
             var temppath = '';
-            if (id){
+            if (id) {
                 temppath = $scope.selectedItem.path;
-            } else if(path){
+            } else if (path) {
                 temppath = path;
                 //window.location.assign(path);
             } else {
@@ -30,7 +31,7 @@ ownDriveCtrl.controller('RecentCtrl', ['$state', '$rootScope', '$scope', '$state
             });
 
 
-        }
+        };
 
 
         var getRecent = function () {
@@ -144,6 +145,32 @@ ownDriveCtrl.controller('RecentCtrl', ['$state', '$rootScope', '$scope', '$state
         }
 
 
+        //share
+        var share = function () {
+
+            function afterShowAnimation(scope, element, options) {
+                // post-show code here: DOM element focus, etc.
+            }
+
+
+            $mdDialog.show({
+                templateUrl: 'templates/components/file-share.html',
+                locals: {
+                    item: $scope.selectedItem
+                },
+                controller: 'FileShareDialogCtrl',
+                onComplete: afterShowAnimation
+            })
+                .then(function (data) {
+                    refresh();
+                })
+            function afterShowAnimation() {
+
+            }
+
+        }
+
+
         //refresh
         var refresh = function () {
             $rootScope.copyclipboard = '';
@@ -238,6 +265,9 @@ ownDriveCtrl.controller('RecentCtrl', ['$state', '$rootScope', '$scope', '$state
                     break;
                 case 'removefav':
                     removeFav();
+                    break;
+                case 'share':
+                    share();
                     break;
 
                 default:
