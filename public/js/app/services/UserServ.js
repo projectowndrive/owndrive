@@ -82,11 +82,8 @@ ownDriveServ.factory('UserServ', ['$http', '$q', '$window', 'owndriveconst', '$r
         var deffered = $q.defer();
 
         $http({
-            url: owndriveconst.APP_BACKEND + '/getsettingresource',
-            method: 'post',
-            data: {
-                'resource': 'userlist'
-            },
+            url: owndriveconst.APP_BACKEND + '/getsettingresource/userlist',
+            method: 'get',
             headers: {
                 'Content-Type': 'aplication/json'
             }
@@ -103,7 +100,29 @@ ownDriveServ.factory('UserServ', ['$http', '$q', '$window', 'owndriveconst', '$r
         return deffered.promise;
     }
 
+    service.saveSettings = function (settingName, settingData){
+        var deferred = $q.defer();
+
+        $http({
+            url: owndriveconst.APP_BACKEND + '/settings/' + settingName + '/save',
+            method: 'post',
+            data: settingData,
+            headers: {
+                'Content-Type': 'aplication/json'
+            }
+        })
+
+            .success(function(data, status, headers, config){
+                deferred.resolve(data);
+            })
+
+            .error(function(data, status, headers, config){
+
+            })
+
+        return deferred.promise;
+    }
+
 
 	return service;
 }]);
-

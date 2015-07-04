@@ -59,6 +59,8 @@ class AuthService {
     function register($details){
         $user = $this->user->create([
             'username' => $details['username'],
+            'firstname' => $details['first_name'],
+            'lastname' => $details['last_name'],
             'email' => $details['email'],
             'password' => \Hash::make($details['password'])
         ]);

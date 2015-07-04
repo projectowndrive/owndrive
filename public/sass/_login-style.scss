@@ -8,17 +8,33 @@
 	.container{
 		.login-box{
 				background-color: #fff;
+            .link-register{
+                font-size: 11px;
+                color: #666666;
+                a{
+                    color: #999999;
+                }
+            }
 			md-card{
 				background-color: #fff;
-				margin: 0;				
+				margin: 0;
+                max-height: 98vh;
+                overflow-y: auto !important;
+                padding-bottom: 10px;
 				h2{
 					color: #666;
 					text-align: center;	
 					margin: 0;
 				}
-				md-content{
+
+                md-checkbox .md-label{
 					padding: 0;
-					md-icon{
+                    font-size: 14px;
+
+                    overflow-y: hidden !important;
+                    .agreeTos label{
+                    }
+                    md-icon{
 						height: 24px;
 						width: 24px;
 					}

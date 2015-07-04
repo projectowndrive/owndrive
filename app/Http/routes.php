@@ -48,6 +48,7 @@ Route::group(['domain' => 'backend.'. preg_replace('#^https?://#', '', Config::g
     Route::post('/getrecentfiles', 'FilesController@getRecentFiles');
     Route::post('/getfavoritefiles', 'FilesController@getFavoriteFiles');
     Route::post('/gettrashedfiles', 'FilesController@getTrashedFiles');
+    Route::post('/searchfiles', 'FilesController@searchFiles');
 
     Route::post('/renamefile', 'FilesController@renameFile');
     Route::post('/copyfile', 'FilesController@copyFile');
@@ -66,7 +67,9 @@ Route::group(['domain' => 'backend.'. preg_replace('#^https?://#', '', Config::g
 
     Route::post('/getdownloadurl', 'FilesController@getDownloadUrl');
 
-    Route::post('/getsettingresource', 'SettingsController@settingResourceProvider');
+    Route::get('/getsettingresource/{resource}', 'SettingsController@settingResourceProvider');
+    Route::get('/settings/{settingName}', 'SettingsController@getSettings');
+    Route::post('/settings/{settingName}/save', 'SettingsController@saveSettings');
 
 
 });

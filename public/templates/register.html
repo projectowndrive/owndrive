@@ -1,0 +1,113 @@
+<div class="login-wrapper">
+    <div class="container" layout="row" layout-sm="column">
+
+        <div flex layout="column" layout-align="center center"><img src="img/logo.png" alt="Store"></div>
+
+        <div flex layout="row" layout-align="center center" layout-align-sm="center">
+            <div class="login-box" flex="80" flex-sm="100" flex-gt-md="60">
+                <md-card>
+                    <md-card-content>
+                        <h2>Register</h2>
+
+                        <form name="register" novalidate>
+                            <md-content class="md-padding">
+                                <md-input-container class="md-primary md-hue-1">
+                                    <!--<md-icon md-svg-src="/img/icons/ic_person_24px.svg"></md-icon>-->
+                                    <label class="md-primary md-hue-1">First Name</label>
+                                    <input type="text" name="firstname" ng-model="formData.first_name" required
+                                           class="md-primary md-hue-1">
+
+                                    <div ng-messages="register.firstname.$error">
+                                        <div ng-message="required">This is required.</div>
+                                        <div ng-message="md-maxlength">The name has to be less than 50 characters
+                                            long.
+                                        </div>
+                                    </div>
+                                </md-input-container>
+
+                                <md-input-container class="md-primary md-hue-1">
+                                    <!--<md-icon md-svg-src="/img/icons/ic_person_24px.svg"></md-icon>-->
+                                    <label class="md-primary md-hue-1">Last Name</label>
+                                    <input type="text" name="lastname" ng-model="formData.last_name" required class="md-primary md-hue-1">
+
+                                    <div ng-messages="register.lastname.$error">
+                                        <div ng-message="required">This is required.</div>
+                                        <div ng-message="md-maxlength">The name has to be less than 30 characters
+                                            long.
+                                        </div>
+                                    </div>
+                                </md-input-container>
+
+                                <md-input-container>
+                                    <label class="md-primary md-hue-1">Email</label>
+                                    <input type="email" name="email" ng-model="formData.email" required>
+                                    <div ng-messages="register.email.$error">
+                                        <div ng-message="required">This is required.</div>
+                                        <div ng-message="email">Invalid email</div>
+                                    </div>
+                                </md-input-container>
+
+                                <md-input-container class="md-primary md-hue-1">
+                                    <!--<md-icon md-svg-src="/img/icons/ic_person_24px.svg"></md-icon>-->
+                                    <label class="md-primary md-hue-1">Username</label>
+                                    <input md-maxlength="20" type="text" name="username" ng-model="formData.username"
+                                           required class="md-primary md-hue-1">
+
+                                    <div ng-messages="register.username.$error">
+                                        <div ng-message="required">This is required.</div>
+                                        <div ng-message="md-maxlength">The name has to be less than 20 characters
+                                            long.
+                                        </div>
+                                    </div>
+                                </md-input-container>
+
+                                <md-input-container class="md-primary md-hue-1">
+                                    <!--<md-icon md-svg-src="/img/icons/ic_blur_circular_48px.svg"></md-icon>-->
+                                    <label class="md-primary md-hue-1">Password</label>
+                                    <input md-minlength="6" type="password" name="password" ng-model="formData.password"
+                                           required class="md-primary md-hue-1">
+
+                                    <div ng-messages="register.password.$error">
+                                        <div ng-message="required">This is required.</div>
+                                        <div ng-message="md-minlength">The password is too short.</div>
+                                    </div>
+                                </md-input-container>
+
+                                <md-input-container class="md-primary md-hue-1">
+                                    <!--<md-icon md-svg-src="/img/icons/ic_blur_circular_48px.svg"></md-icon>-->
+                                    <label class="md-primary md-hue-1">Retype Password</label>
+                                    <input md-minlength="6" type="password" name="verifiedpassword"
+                                           ng-model="formData.verifiedpassword" required class="md-primary md-hue-1">
+
+                                    <div ng-messages="register.verifiedpassword.$error">
+                                        <div ng-message="required">This is required.</div>
+                                        <div ng-message="md-minlength">The password is too short.</div>
+                                    </div>
+                                </md-input-container>
+
+                                <md-checkbox ng-model="agreeTos" aria-label="Agree Terms of Service"
+                                             class="md-primary md-hue-1" required>
+                                    I Agree Terms of Services.
+                                    <div ng-messages="register.agreeTos.$error">
+                                        <div ng-message="required">Please agree terms of service.</div>
+                                    </div>
+                                </md-checkbox>
+
+                            </md-content>
+                        </form>
+                        <br>
+
+                        <div layout="row" layout-align-sm="center">
+                            <md-button flex-order="2" class="md-primary md-raised  md-hue-1" flex-sm="100" flex="" ng-click="registerUser(formData)">Register</md-button>
+                            <md-button flex-order="1" order="1" class="md-raised" flex-sm="100" flex="" ng-click="reset()">Reset</md-button>
+                        </div>
+
+
+                    </md-card-content>
+
+                </md-card>
+            </div>
+        </div>
+
+    </div>
+</div>

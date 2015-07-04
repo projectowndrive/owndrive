@@ -462,6 +462,36 @@ ownDriveServ.factory('StoreItemProcessServ', ['$http', '$q', 'owndriveconst',
         }
 
 
+        service.searchItem = function (query) {
+            var deferred = $q.defer();
+
+            $http({
+                url: owndriveconst.APP_BACKEND + '/searchfiles',
+                method: 'post',
+                data: {
+                    'query': query,
+                },
+                headers: {
+                    'Content-Type': 'aplication/json'
+                },
+                ignoreLoadingBar: true,
+            })
+
+                .success(function(data, status, headers, config){
+                    deferred.resolve(data);
+                })
+
+                .error(function(data, status, headers, config){
+
+                })
+
+
+            return deferred.promise;
+        }
+
+
+
+
         return service;
     }
 ])

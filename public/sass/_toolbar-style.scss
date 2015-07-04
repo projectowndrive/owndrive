@@ -1,39 +1,68 @@
 .main-toolbar {
-  //background-color: #1a0dab !important;
-  background-color: #110974 !important;
-	img.logo {
-		margin: 10px 0 0 0px;
-    width: 80%;
-    height: auto;;
-	}
-	.search {
-		display: inline;
-		margin: 14px auto 0;
-	}
-	.logo-wraper {
-		display: inline;
-		width: 50%;
-	}
-	.user {
-		.user-tool {
-			display: inline-block;
-			margin: 0;
-			vertical-align: middle;
-			padding: inherit;
-			//margin-bottom: 10px;
-			i {
-				font-size: 25px;
-				margin: 0;
-			}
-			img {
-				vertical-align: middle;
-			}
-		}
-	}
-  .username{
+    //background-color: #1a0dab !important;
+    background-color: #110974 !important;
+    img.logo {
+        margin: 10px 0 0 0px;
+        width: 80%;
+        height: auto;;
+    }
+    .search {
+        display: inline;
+        margin: 14px auto 0;
+    }
+    .logo-wraper {
+        display: inline;
+        width: 50%;
+    }
+    .user {
+        margin-right: 20px;
+        .user-tool {
+            display: inline-block;
+            margin: 0;
+            vertical-align: middle;
+            padding: inherit;
+            //margin-bottom: 10px;
+            i {
+                font-size: 25px;
+                margin: 0;
+            }
+            img {
+                vertical-align: middle;
+            }
+        }
+        .user-avatar {
+            border-radius: 200px;
+            overflow: hidden;
+            text-align: center;
+            vertical-align: middle;
+            img {
+                min-height: 100%;
+                max-width: 100%;
+                height: auto;
+                width: auto;
+                max-height: 50px;
+                max-width: 50px;
+                margin: auto;
+            }
+        }
+
+    }
+    .username {
+        font-size: 14px;
+        margin-right: 20px;
+        opacity: 0.8;
+        cursor: default;
+    }
+}
+
+md-menu-item{
+button.user-menu-btn {
     font-size: 14px;
-    margin-right: 20px;
-    opacity: 0.8;
-    cursor: default;
-  }
+    line-height: 50px;
+    i {
+        font-size: 18px;
+        margin-right: 10px;
+        vertical-align: sub;
+    }
+}
 }

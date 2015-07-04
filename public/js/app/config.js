@@ -33,6 +33,14 @@ ownDrive
                     controller: "LoginCtrl"
                 })
 
+                .state('register', {
+                    url: "/register",
+                    requireAuth: false,
+                    templateUrl: "/templates/register.html",
+                    controller: "RegisterCtrl"
+                })
+
+
                 .state('app', {
                     url: "",
                     templateUrl: "templates/app-templates/app.html",
@@ -201,6 +209,7 @@ ownDrive
             $rootScope.uploader.autoUpload = true;
             $rootScope.uploader.withCredentials = true;
             $rootScope.uploader.headers = {Accept: 'application/json'};
+            $rootScope.uploader.alias  = 'image';
 
 
 

@@ -5,6 +5,8 @@ var ownDriveCtrl = angular.module('ownDriveCtrl', []);
 var ownDriveDir = angular.module('ownDriveDir', []);
 
 var ownDrive = angular.module('ownDrive', ['ngCookies', 'ngAnimate', 'ngMaterial', 'ngMessages', 'ui.router', 'ng-context-menu', 'angular-loading-bar', 'angularFileUpload', 'toastr', 'ngDialog', 'ownDriveServ', 'ownDriveCtrl', 'ownDriveDir']);
+
+
 ownDriveServ.factory('AuthServ', ['$http', '$q', '$window', 'owndriveconst',
     function($http, $q, $window, owndriveconst) {
 
@@ -65,7 +67,6 @@ ownDriveServ.factory('AuthServ', ['$http', '$q', '$window', 'owndriveconst',
                 .error(function (data, status) {
 
                 });
-            return defered.promise;
         }
 
 
@@ -77,7 +78,6 @@ ownDriveServ.factory('AuthServ', ['$http', '$q', '$window', 'owndriveconst',
                 url : owndriveconst.APP_BACKEND + '/register',
                 method: 'post',
                 data: data,
-                withCredentials: true
             })
 
                 .success(function(data, status){
@@ -471,7 +471,7 @@ ownDriveServ.factory('OwndriveInterceptor', ['$q', 'owndriveconst', '$injector',
 
             //console.log('@interceptor->request'+ !(config.url.indexOf(url + '/login') > -1))
 
-            if (window.localStorage.getItem("loginStatus") == "false" && !(config.url.indexOf(url + '/login') > -1) && !(config.url.indexOf(url + '/register') > -1)) {
+            if (window.localStorage.getItem("loginStatus") == "false" && !(config.url.indexOf(url + '/login') > -1)) {
                 var canceller = $q.defer();
                 config.timeout = canceller.promise;
                 config.statusText = 'canceled by owndrive';
@@ -532,16 +532,7 @@ ownDriveServ.factory('OwndriveInterceptor', ['$q', 'owndriveconst', '$injector',
 
             if(rejection.data){
                 if(rejection.data.status === 'error'){
-
-                    if(rejection.data.errors){
-                    angular.forEach(rejection.data.errors, function(val, key){
-                        val.forEach(function(err){
-                            toastr.error(err, 'Error in ' + key);
-                        });
-                    });
-                    } else {
-                        toastr.error(rejection.data.message, 'Error, ' + rejection.statusText);
-                    }
+                    toastr.error(rejection.data.message, 'Error, ' + rejection.statusText);
                 }
             }
 
@@ -1063,36 +1054,6 @@ ownDriveServ.factory('StoreItemProcessServ', ['$http', '$q', 'owndriveconst',
 
             return deffered.promise;
         }
-
-
-        service.searchItem = function (query) {
-            var deferred = $q.defer();
-
-            $http({
-                url: owndriveconst.APP_BACKEND + '/searchfiles',
-                method: 'post',
-                data: {
-                    'query': query,
-                },
-                headers: {
-                    'Content-Type': 'aplication/json'
-                },
-                ignoreLoadingBar: true,
-            })
-
-                .success(function(data, status, headers, config){
-                    deferred.resolve(data);
-                })
-
-                .error(function(data, status, headers, config){
-
-                })
-
-
-            return deferred.promise;
-        }
-
-
 
 
         return service;
@@ -2412,66 +2373,44 @@ ownDriveCtrl.controller('RecentCtrl', ['$state', '$rootScope', '$scope', '$state
 
 ]);
 ownDriveCtrl.controller('RegisterCtrl', ['$scope', '$rootScope', '$state', '$mdToast', '$window', 'AuthServ', 'toastr',
-    function ($scope, $rootScope, $state, $mdToast, $window, AuthServ, toastr) {
+        function($scope, $rootScope, $state, $mdToast, $window, AuthServ, toastr) {
 
-        $scope.formData = {};
 
-        $scope.registerUser = function (formData) {
+            $scope.registerUser = function(formData) {
 
-            if ($scope.agreeTos) {
                 $scope.registerData = angular.copy(formData);
-                if ($scope.registerData) {
-                    AuthServ.registerUser(formData).then(function (response) {
-                        console.log(response)
-                        if (response.status == "success") {
-                            $state.go("login");
+
+                if($scope.registerData){
+                    AuthServ.registerUser(formData).then(function(response){
+                        console.log(response);
+                        if(response.data){
                         }
                     })
                 }
-            } else {
-                toastr.warning('You have not accepted Terms od Service', 'Warning')
             }
-        }
 
-        $scope.reset = function () {
-            $scope.formData = {};
-        };
+            $scope.reset = function() {
+                $scope.formData = {};
+            };
 
 
-    }]);
-ownDriveCtrl.controller('SearchDirCtrl', ['$scope', '$animate', 'StoreItemProcessServ',
+ }]);
+ownDriveCtrl.controller('SearchDirCtrl',['$scope', '$animate', 'StoreItemProcessServ',
     function ($scope, $animate, StoreItemProcessServ) {
 
-        var searching = false;
-        $scope.searchList = function (query) {
-            if (!searching) {
-                searching = true;
-                $scope.autocompleteList = StoreItemProcessServ.searchItem(query).then(function (response) {
-                    searching = false;
-                    return response;
-                });
-            } else {
-             return '';
-            }
+
+         $scope.searchList = function(){
+             /*StoreItemProcessServ.getUserList().then(function (response){
+                 console.log(response);
+                 $scope.autocompleteList = response;
+             })*/
+         }
+
+        $scope.searchList();
+
+        $scope.item = function(query){
+            $scope.autocompleteList = query ? $scope.autocompleteList.filter( createFilterFor(query) ) : $scope.autocompleteList;
         }
-
-        //$scope.searchList();
-
-        /* $scope.search = function(query){
-         //$scope.autocompleteList = query ? $scope.autocompleteList.filter( fileSearch(query) ) : $scope.searchList(query).filter(fileSearch(query));
-
-         $scope.autocompleteList = $scope.searchList(query).filter(fileSearch(query));
-         }*/
-
-        var fileSearch = function (query) {
-            if (query) {
-                var arr = $scope.autocompleteList.filter(function (file) {
-                    var name = file.name.toLowerCase()
-                    return (name.indexOf(query.toLowerCase()) != -1);
-                });
-            }
-        }
-
 
         function createFilterFor(query) {
             var lowercaseQuery = angular.lowercase(query);
@@ -2992,7 +2931,6 @@ ownDrive
                     templateUrl: "/templates/register.html",
                     controller: "RegisterCtrl"
                 })
-
 
                 .state('app', {
                     url: "",

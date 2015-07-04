@@ -1,5 +1,7 @@
 <?php namespace OwnDrive\Http\Controllers;
 
+use OwnDrive\Commands\HandleErrorCommand;
+use OwnDrive\Commands\HandleResponseCommand;
 use OwnDrive\Http\Requests;
 use OwnDrive\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -46,10 +48,10 @@ class AuthController extends Controller {
     {
         try{
             $this->auth->register($request->all());
-            $response = Response::make(['status'=>'success'],200);
+            $response = $this->dispatch(new HandleResponseCommand("Registered"));
         }
         catch (\Exception $e){
-            $response = Response::make(['status'=>'error', 'message'=>$e],500);
+            $response = $this->dispatch(new HandleErrorCommand("Registration failed"));
         }
 
         return $response;

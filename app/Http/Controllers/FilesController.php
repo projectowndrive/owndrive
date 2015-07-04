@@ -1,5 +1,6 @@
 <?php namespace OwnDrive\Http\Controllers;
 
+use Illuminate\Foundation\Bus\DispatchesCommands;
 use OwnDrive\Http\Requests;
 use OwnDrive\Http\Controllers\Controller;
 
@@ -21,10 +22,18 @@ use OwnDrive\Services\FileService;
 
 class FilesController extends Controller {
 
+use DispatchesCommands;
 
     function __construct(FileService $fileService)
     {
         $this->fileService = $fileService;
+    }
+
+    public function searchFiles(Request $request)
+    {
+        $query = $request->input('query');
+
+        return $this->fileService->search($query);
     }
 
 

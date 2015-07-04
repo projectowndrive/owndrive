@@ -19,6 +19,7 @@
       line-height: 15px;
       width: 80%;
       padding: 10px 0;
+      display: inline;
 
       i {
         font-size: 25px;
@@ -51,6 +52,12 @@
       text-transform: none;
       &:hover {
         background-color: #1b1e25;
+      }
+
+      a{
+        position: absolute;
+        left: 0;
+        padding-left: 15px;
       }
     }
   }

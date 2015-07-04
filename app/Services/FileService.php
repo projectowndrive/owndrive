@@ -74,6 +74,14 @@ class FileService
 
 
     /**
+     * @param $query
+     */
+    public function search($query){
+        $userId = $this->auth->id();
+        return File::where('owner_id', '=', $userId)->search($query)->get();
+    }
+
+    /**
      * @param int||null $userId
      * @param int||null $fileId
      * @return array

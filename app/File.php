@@ -1,10 +1,23 @@
 <?php namespace OwnDrive;
 
 use Illuminate\Database\Eloquent\Model;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 class File extends Model {
 
+    use SearchableTrait;
+
 	protected $guarded = ['id'];
+
+    protected $searchable = [
+        'columns' => [
+            'name' => 1,
+        ],
+
+       /* 'joins' => [
+            'users' => ['files.owner_id', 'users.id'],
+        ],*/
+    ];
 
     public function owner()
     {

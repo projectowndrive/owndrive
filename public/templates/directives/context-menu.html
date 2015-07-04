@@ -1,8 +1,8 @@
 <div class="dropdown position-fixed store-context-menu md-whiteframe-z2" id="context-menu">
-  <div class="dropdown-menu" role="menu">
-    <div ng-repeat="item in contextMenuItems">
-      <md-button ng-if="item.enabled" ng-click="contextMenuAction(item.action)">
-        <a class="pointer" role="menuitem" tabindex="{{item.tabIndex}}" md-ink-ripple="#99a">
+  <div class="dropdown-menu" role="menu"  layout="column">
+    <div ng-repeat="item in contextMenuItems" flex="100">
+      <md-button ng-if="item.enabled" ng-click="contextMenuAction(item.action)" flex="100">
+        <a class="pointer" role="menuitem" tabindex="{{item.tabIndex}}" md-ink-ripple="#99a" flex="100">
           <i class="{{item.icon}}"></i>{{item.label}}
         </a>
       </md-button>

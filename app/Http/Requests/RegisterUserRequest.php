@@ -23,9 +23,11 @@ class RegisterUserRequest extends Request {
 	public function rules()
 	{
 		return [
+            'first_name' => 'required',
             'username' => 'required|unique:users,username|max:100',
             'email' => 'required|unique:users,email|email|max:100',
-            'password' => 'required|min:8'
+            'password' => 'required|min:8|same:verifiedpassword',
+            'verifiedpassword'=> 'required'
 		];
 	}
 

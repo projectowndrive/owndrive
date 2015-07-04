@@ -32,7 +32,8 @@ class HandleResponseCommandHandler {
 	{
         return $this->response->create([
             'status' => 'success',
-            'message' => $command->message
+            'message' => $command->message,
+            'data' => $command->data
         ],200);
 	}
 

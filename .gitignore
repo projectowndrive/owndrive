@@ -10,6 +10,8 @@
 /public/Frontend.zip
 /public/gemfile
 /public/img/temp
+/public/img/profile/*
+!/public/img/profile/default.jpg
 /public/js/lib
 /public/stylesheets
 /public/store.sublime-project

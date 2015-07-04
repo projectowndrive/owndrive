@@ -42,15 +42,38 @@ ownDriveServ.factory('AuthServ', ['$http', '$q', '$window', 'owndriveconst',
             var defered = $q.defer();
 
             $http({
-                url : owndriveconst.APP_BACKEND + '/logout',
+                url: owndriveconst.APP_BACKEND + '/logout',
                 method: 'post',
                 withCredentials: true
             })
 
-                .success(function(data, status){
-                    if (!data.loginStatus){
+                .success(function (data, status) {
+                    if (!data.loginStatus) {
                         $window.localStorage.setItem("loginStatus", false);
                     }
+
+                    defered.resolve(data);
+                })
+
+                .error(function (data, status) {
+
+                });
+            return defered.promise;
+        }
+
+
+
+            service.registerUser = function(data) {
+            var defered = $q.defer();
+
+            $http({
+                url : owndriveconst.APP_BACKEND + '/register',
+                method: 'post',
+                data: data,
+                withCredentials: true
+            })
+
+                .success(function(data, status){
 
                     defered.resolve(data);
                 })

@@ -1,5 +1,10 @@
-ownDriveCtrl.controller('MainToolbarDirCtrl', ['$scope', '$window', '$state', 'toastr', '$rootScope', 'AuthServ', 'UserServ', 'owndriveconst', function ($scope, $window, $state, toastr, $rootScope, Auth, User, owndriveconst) {
-	
+ownDriveCtrl.controller('MainToolbarDirCtrl', ['$scope', '$window', '$state', 'toastr', '$rootScope', '$mdDialog', 'AuthServ', 'UserServ', 'owndriveconst', function ($scope, $window, $state, toastr, $rootScope,$mdDialog, Auth, User, owndriveconst) {
+
+    $rootScope.activeUser = JSON.parse($window.localStorage.getItem('activeUser'));
+
+    $scope.avatar = owndriveconst.APP_BACKEND + '/img/profile/' + $rootScope.activeUser.profile_pic;
+    $rootScope.userName = $rootScope.activeUser.first_name + ' ' + $rootScope.activeUser.last_name;
+
 
 	$scope.logout = function() {
     	Auth.logout().then(function(data){
@@ -14,27 +19,25 @@ ownDriveCtrl.controller('MainToolbarDirCtrl', ['$scope', '$window', '$state', 't
         });
     };
 
-    $rootScope.activeUser = JSON.parse($window.localStorage.getItem('activeUser'));
 
-    $scope.avatar = owndriveconst.APP_BACKEND + '/img/profile/' + $rootScope.activeUser.profile_pic;
-    $scope.userName = $rootScope.activeUser.first_name + $rootScope.activeUser.last_name
-
-
-	/*User.getAvatar().then(function (data) {
-		$scope.avatar = data;
+    $scope.profileSettings = function(){
+        function afterShowAnimation(scope, element, options) {
+            // post-show code here: DOM element focus, etc.
+        }
 
 
-    *//*$scope.getMatches = function(searchText) {
-        return {
-          display: ''
-        };
+        $mdDialog.show({
+            templateUrl: 'templates/components/profile-settings.html',
+            controller: 'ProfileSettingsCtrl',
+            onComplete: afterShowAnimation
+        })
+            .then(function (data) {
 
-        $scope.searchText  = '';
-    };    *//*
+            })
+        function afterShowAnimation() {
 
-	});*/
-
-	
+        }
+    }
 
 
 }]);

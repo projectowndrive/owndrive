@@ -1,0 +1,117 @@
+<md-dialog class="settings">
+    <md-toolbar class="sub-toolbar md-whiteframe-z1 md-accent" layout="row">
+        <div class="title">
+            Profile Settings
+        </div>
+        <md-button class="md-fab md-mini md-primary md-hue-1 button-right" ng-click="save()"><i
+                class="ion-android-done"></i></md-button>
+    </md-toolbar>
+    <md-content>
+        <div class="content">
+
+            <div class="profile" id="profile">
+                <img ng-src={{avatar}} class="profile-pic-settings" alt="$parent.userName"/>
+
+                <div class="progress" ng-if="showProgress">
+                    <md-progress-circular md-mode="indeterminate" ng-if="uploader.isUploading"></md-progress-circular>
+                    <!--<md-progress-circular md-mode="determinate" value="uploader.queue[0].progress" ng-if="uploader.isUploading && uploader.progress != 0"></md-progress-circular>-->
+                </div>
+                <div class="link" ng-click="showFileSelectDialog()">Change Photo</div>
+                <input type="file" nv-file-select uploader="uploader" class="upload_profile_pic" accept="image/*">
+            </div>
+
+            <div class="user-info">
+                <h4>{{userName}}</h4>
+
+                <div>{{userEmail}}</div>
+            </div>
+
+            <h5>Change your profile settings.</h5>
+
+            <form name="profileSetting" novalidate>
+                <md-input-container>
+                    <label>User Name</label>
+                    <input ng-model="user.username" disabled>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>First Name</label>
+                    <input ng-model="user.first_name" name="firstName" required>
+
+                    <div ng-messages="profileSetting.firstName.$error">
+                        <div ng-message="required">This is required.</div>
+                        <div ng-message="md-maxlength">The name has to be less than 50 characters long.</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>Last Name</label>
+                    <input ng-model="user.last_name" name="lastName" required>
+
+                    <div ng-messages="profileSetting.lastName.$error">
+                        <div ng-message="required">This is required.</div>
+                        <div ng-message="md-maxlength">The name has to be less than 50 characters long.</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>Email</label>
+                    <input type="email" ng-model="user.email" name="email" required>
+
+                    <div ng-messages="profileSetting.email.$error">
+                        <div ng-message="required">This is required.</div>
+                        <div ng-message="email">Invalid email</div>
+                    </div>
+                </md-input-container>
+            </form>
+        </div>
+        <md-divider></md-divider>
+        <div class="content">
+
+            <h5>Change your password.</h5>
+
+            <form name="profilePasswordSetting">
+                <md-input-container>
+                    <label>Current password</label>
+                    <input type="password" ng-model="passwordChange.currentpassword" name="currentPassword" required>
+
+                    <div ng-messages="profilePasswordSetting.currentPassword.$error">
+                        <div ng-message="required">This is required.</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>New password</label>
+                    <input type="password" ng-model="passwordChange.newpassword" name="newPassword" required>
+
+                    <div ng-messages="profilePasswordSetting.newPassword.$error">
+                        <div ng-message="required">This is required.</div>
+                        <div ng-message="email">Invalid email</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container>
+                    <label>Retype new password</label>
+                    <input type="password" ng-model="passwordChange.verifiedpassword" name="verifiedPassword" required>
+
+                    <div ng-messages="profilePasswordSetting.verifiedPassword.$error">
+                        <div ng-message="required">This is required.</div>
+                        <div ng-message="email">Invalid email</div>
+                        <div ng-message="field-match">The password doesn't match above</div>
+                    </div>
+                </md-input-container>
+
+                <md-button class="md-raised md-primary md-hue-1" ng-click="changePassword()">Change Password</md-button>
+            </form>
+        </div>
+    </md-content>
+</md-dialog>
+
+<!--<md-tabs md-swipe-content="true">
+    <md-tab>
+        <md-tab-label>Profile</md-tab-label>
+    </md-tab>
+    <md-tab>
+        <md-tab-label>Profile</md-tab-label>
+    </md-tab>
+</md-tabs>-->

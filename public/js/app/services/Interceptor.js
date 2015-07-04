@@ -17,7 +17,7 @@ ownDriveServ.factory('OwndriveInterceptor', ['$q', 'owndriveconst', '$injector',
 
             //console.log('@interceptor->request'+ !(config.url.indexOf(url + '/login') > -1))
 
-            if (window.localStorage.getItem("loginStatus") == "false" && !(config.url.indexOf(url + '/login') > -1)) {
+            if (window.localStorage.getItem("loginStatus") == "false" && !(config.url.indexOf(url + '/login') > -1) && !(config.url.indexOf(url + '/register') > -1)) {
                 var canceller = $q.defer();
                 config.timeout = canceller.promise;
                 config.statusText = 'canceled by owndrive';
@@ -78,7 +78,16 @@ ownDriveServ.factory('OwndriveInterceptor', ['$q', 'owndriveconst', '$injector',
 
             if(rejection.data){
                 if(rejection.data.status === 'error'){
-                    toastr.error(rejection.data.message, 'Error, ' + rejection.statusText);
+
+                    if(rejection.data.errors){
+                    angular.forEach(rejection.data.errors, function(val, key){
+                        val.forEach(function(err){
+                            toastr.error(err, 'Error in ' + key);
+                        });
+                    });
+                    } else {
+                        toastr.error(rejection.data.message, 'Error, ' + rejection.statusText);
+                    }
                 }
             }
 
@@ -96,6 +105,21 @@ ownDriveServ.factory('OwndriveInterceptor', ['$q', 'owndriveconst', '$injector',
         } else if (rejection.status === 422) {
 
             if(rejection.data){
+                console.log(rejection.data);
+
+
+
+                    angular.forEach(rejection.data, function(value, key){
+                        for(var i=0; i < value.length; i++){
+                            toastr.error(value[i], 'Error');
+                        }
+                    })
+
+
+
+
+
+
                 if(rejection.data.status === 'error'){
                     toastr.error(rejection.data.message, 'Error');
                 }

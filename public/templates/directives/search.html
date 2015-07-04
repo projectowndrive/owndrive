@@ -1,18 +1,19 @@
             <md-autocomplete
-                    md-no-cache="false"
+                    md-no-cache="true"
                     md-selected-item="selectedItem"
-                    md-search-text-change="searchTextChange(searchText)"
+                    md-search-text-change="searchList(searchText)"
                     md-search-text="searchText"
                     md-selected-item-change="searchUser(item)"
                     md-items="item in autocompleteList"
-                    md-item-text="item.username"
+                    md-item-text="item.name"
                     md-min-length="0"
-                    placeholder="{{placeholder}}">
+                    placeholder="Search for files"
+                    name="filesearch">
                 <md-item-template>
-                    <span md-highlight-text="searchText" md-highlight-flags="^i">{{item.display}}</span>
+                    <span md-highlight-text="searchText" md-highlight-flags="^i">{{item.name}}</span>
                 </md-item-template>
                 <md-not-found>
-                    No matches found for "{{ctrl.searchText}}".
+                    No matches found for "{{searchText}}".
                 </md-not-found>
             </md-autocomplete>
 

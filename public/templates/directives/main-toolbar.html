@@ -10,16 +10,34 @@
 	<div class="user" flex="30" layout="row" layout-align="end center">
 <!--		<md-button class="user-tool md-icon-button" ng-aria="Notifications" aria-label="Notifications">
 			<i class="ion-android-notifications"></i>
-		</md-button>
+		</md-button>-->
+		<div class="user-tool username">{{userName}}</div>
+
 		<md-button class="user-tool md-icon-button" ng-aria="Settings" aria-label="Settings">
 			<i class="ion-android-settings"></i>
-		</md-button>-->
-        <div class="username">{{userName}}</div>
-		<md-button class="user-tool md-icon-button" ng-click="logout()" ng-aria="User options" aria-label="User options">
+		</md-button>
+
+        <md-menu md-position-mode="target-right target" class="user-tool" md-offset="0 64">
+		<md-button class="md-icon-button" ng-click="$mdOpenMenu($event)" ng-aria="open user options menu" aria-label="open user options menu" md-menu-origin>
 			<div class="user-avatar">
-				<img ng-src="{{avatar}}" alt="">
+				<img ng-src="{{avatar}}" alt="" class="profile-pic">
                 <!--<i class="ion-power"></i>-->
 			</div>
 		</md-button>
+            <md-menu-content width="3">
+                <md-menu-item>
+                    <md-button ng-click="profileSettings()" class="user-menu-btn">
+                        <!--<md-icon md-svg-icon="call:dialpad" md-menu-align-target></md-icon>-->
+                        <i class="ion-android-person"></i> Profile
+                    </md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="logout()" class="user-menu-btn">
+                        <!--<md-icon md-svg-icon="call:dialpad" md-menu-align-target></md-icon>-->
+                        <i class="ion-android-lock"></i> Log out
+                    </md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
 	</div>
 </md-toolbar>
